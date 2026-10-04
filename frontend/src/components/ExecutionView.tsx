@@ -330,14 +330,15 @@ export function ExecutionView({
 
                   {/* Tool Call or Error Tag */}
                   {step.tool && (
-                    <div className="mt-2 flex items-center gap-2">
+                    <div className="mt-2 flex items-center gap-2 flex-wrap">
                       <span className="font-mono text-[10px] bg-slate-900 text-blue-300 px-2 py-0.5 rounded">
                         tool: {step.tool}
                       </span>
-                      {step.browser_activity && (
-                        <span className="inline-flex items-center gap-1 text-[10px] text-slate-500 bg-slate-100 px-1.5 py-0.5 rounded font-mono">
-                          <MousePointer size={10} />
-                          <span>{step.browser_activity.action}</span>
+                      {(step.browser_activity || step.tool.startsWith("browser_")) && (
+                        <span className="inline-flex items-center gap-1 text-[10px] text-purple-700 bg-purple-50 border border-purple-200 px-1.5 py-0.5 rounded font-mono font-semibold">
+                          <Monitor size={10} />
+                          <span>BROWSER: {step.browser_activity?.action || step.tool.replace("browser_", "").toUpperCase()}</span>
+                          {step.browser_activity?.screenshot_url && <span>📷</span>}
                         </span>
                       )}
                     </div>
@@ -384,7 +385,17 @@ export function ExecutionView({
               Decision
             </button>
             <button
-              onClick={() => setActiveTab("computer")}
+              onClick={() => {
+                setActiveTab("computer");
+                if (!selectedStep?.browser_activity) {
+                  const lastBrowserIdx = run.steps.findLastIndex(
+                    (s) => s.browser_activity || (s.tool && s.tool.startsWith("browser_"))
+                  );
+                  if (lastBrowserIdx !== -1) {
+                    setSelectedStepIndex(lastBrowserIdx);
+                  }
+                }
+              }}
               className={`px-2.5 py-1 rounded font-medium transition-colors ${
                 activeTab === "computer" ? "bg-slate-900 text-white" : "text-slate-600 hover:text-slate-900"
               }`}
@@ -461,7 +472,14 @@ export function ExecutionView({
             </div>
           )}
 
-          {activeTab === "computer" && <ComputerActivityPanel activity={selectedStep?.browser_activity} />}
+          {activeTab === "computer" && (
+            <ComputerActivityPanel
+              activity={selectedStep?.browser_activity}
+              run={run}
+              selectedStepIndex={selectedStepIndex}
+              onSelectStep={(idx) => setSelectedStepIndex(idx)}
+            />
+          )}
 
           {activeTab === "verification" && <VerificationPanel verification={run.verification} />}
 
