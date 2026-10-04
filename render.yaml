@@ -1,0 +1,30 @@
+services:
+  # Backend API with Playwright Chromium
+  - type: web
+    name: centralign-backend
+    env: docker
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: ./backend
+    plan: free
+    region: oregon
+    healthCheckPath: /api/health
+    envVars:
+      - key: PORT
+        value: 8000
+
+  # Frontend Next.js Operations Console
+  - type: web
+    name: centralign-frontend
+    env: node
+    rootDir: ./frontend
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    plan: free
+    region: oregon
+    envVars:
+      - key: NEXT_PUBLIC_API_URL
+        fromService:
+          name: centralign-backend
+          type: web
+          property: host
+          format: https://{host}/api

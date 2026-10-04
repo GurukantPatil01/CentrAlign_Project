@@ -66,7 +66,7 @@ export function ComputerActivityPanel({
         </div>
         <div className="pt-2">
           <a
-            href="http://localhost:8000/portal/invoices"
+            href={`${(process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api").replace(/\/api\/?$/, "")}/portal/invoices`}
             target="_blank"
             rel="noreferrer"
             className="inline-flex items-center gap-1.5 px-3 py-2 rounded text-xs font-semibold bg-blue-600 text-white hover:bg-blue-700 shadow-xs transition-colors"
@@ -79,10 +79,11 @@ export function ComputerActivityPanel({
     );
   }
 
+  const backendBase = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api").replace(/\/api\/?$/, "");
   const screenshotSrc = activeActivity?.screenshot_url
     ? activeActivity.screenshot_url.startsWith("http")
       ? activeActivity.screenshot_url
-      : `http://localhost:8000${activeActivity.screenshot_url}`
+      : `${backendBase}${activeActivity.screenshot_url}`
     : null;
 
   return (
