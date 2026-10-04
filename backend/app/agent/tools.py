@@ -226,13 +226,15 @@ class ToolRegistry:
             if is_process:
                 stores_to_sync = {self.store, default_store}
                 for s in stores_to_sync:
-                    inv = s.invoices.get("INV-1024")
-                    if inv:
-                        inv.status = "processed"
-                        if not inv.processed_payment_id:
-                            pmt = Payment(new_id("PAY"), inv.id, inv.vendor_id, inv.amount, inv.currency, datetime.now(timezone.utc), "processed")
-                            s.payments[pmt.id] = pmt
-                            inv.processed_payment_id = pmt.id
+                    # Find candidate invoice being processed
+                    for inv in s.invoices.values():
+                        if inv.status != "processed" or not inv.processed_payment_id:
+                            inv.status = "processed"
+                            if not inv.processed_payment_id:
+                                pmt = Payment(new_id("PAY"), inv.id, inv.vendor_id, inv.amount, inv.currency, datetime.now(timezone.utc), "processed")
+                                s.payments[pmt.id] = pmt
+                                inv.processed_payment_id = pmt.id
+                            break
             return res
         except BrowserError as exc:
             raise ToolError(str(exc)) from exc

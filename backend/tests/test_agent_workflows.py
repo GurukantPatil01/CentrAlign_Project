@@ -50,3 +50,19 @@ def test_support_workflow_reuses_runtime():
     assert result.status == "complete"
     assert sandbox.tickets["TIC-901"].crm_updated is True
     assert sandbox.tickets["TIC-901"].account_manager_notified is True
+
+
+def test_company_x_prompt_workflow():
+    sandbox, result = run_goal(
+        "Find the latest invoice from Company X, extract the amount and due date, enter it into our internal system, and tell me once it is done."
+    )
+
+    invoice = sandbox.invoices["INV-1025"]
+    assert result.status == "complete"
+    assert invoice.status == "processed"
+    assert invoice.processed_payment_id in sandbox.payments
+    assert "128,450" in result.summary or "128450" in result.summary
+    assert "2026-10-28" in result.summary
+    assert any(step.tool == "verify_invoice_payment" for step in result.steps)
+    assert any(step.tool == "browser_extract" for step in result.steps)
+

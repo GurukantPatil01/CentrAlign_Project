@@ -24,8 +24,18 @@ interface NewTaskConsoleProps {
 
 const PRESET_SCENARIOS = [
   {
+    id: "flagship-company-x",
+    title: "Flagship: Company X Invoice Extraction & Entry",
+    domain: "Autonomous AP",
+    risk: "HIGH",
+    requiresApproval: true,
+    prompt:
+      "Find the latest invoice from Company X, extract the amount and due date, enter it into our internal system, and tell me once it is done.",
+    highlights: ["Browser DOM extraction", "Amount & Due date parsing", "ERP entry & independent verification"],
+  },
+  {
     id: "flagship-invoice",
-    title: "Flagship: Invoice Settlement & Verification",
+    title: "Flagship: Acme Corp Invoice Settlement",
     domain: "Finance / AP",
     risk: "HIGH",
     requiresApproval: true,

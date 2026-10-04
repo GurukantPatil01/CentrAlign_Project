@@ -49,12 +49,14 @@ class EnterpriseStore:
             "VEN-ACME": Vendor("VEN-ACME", "Acme Corp", "Net 30", True, "billing@acme.example"),
             "VEN-GLOBEX": Vendor("VEN-GLOBEX", "Globex", "Net 45", True, "ap@globex.example"),
             "VEN-UMB": Vendor("VEN-UMB", "Umbrella Supplies", "Net 15", True, "finance@umbrella.example"),
+            "VEN-X": Vendor("VEN-X", "Company X", "Net 30", True, "billing@companyx.example"),
         }
         self.invoices: dict[str, Invoice] = {
             "INV-1021": Invoice("INV-1021", "VEN-GLOBEX", "Globex", 45000, "INR", date(2026, 8, 18), date(2026, 9, 17), "Analytics seats"),
             "INV-1022": Invoice("INV-1022", "VEN-ACME", "Acme Corp", 85000, "INR", date(2026, 9, 4), date(2026, 10, 4), "Q3 platform support"),
             "INV-1023": Invoice("INV-1023", "VEN-UMB", "Umbrella Supplies", 12600, "INR", date(2026, 9, 9), date(2026, 10, 9), "Office supplies"),
             "INV-1024": Invoice("INV-1024", "VEN-ACME", "Acme Corp", 145000, "INR", date(2026, 9, 26), date(2026, 10, 26), "Enterprise automation implementation"),
+            "INV-1025": Invoice("INV-1025", "VEN-X", "Company X", 128450, "INR", date(2026, 9, 29), date(2026, 10, 28), "Custom cloud migration services"),
         }
         self.payments: dict[str, Payment] = {}
         self.customers: dict[str, Customer] = {
