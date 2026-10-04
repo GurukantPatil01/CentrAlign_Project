@@ -125,6 +125,10 @@ export interface EvaluationReport {
   recovery_success_rate: number;
   verification_success_rate: number;
   human_intervention_rate: number;
+  browser_success_rate?: number;
+  browser_recovery_rate?: number;
+  memory_retrieval_rate?: number;
+  memory_persistence_rate?: number;
   avg_actions_per_task: number;
   avg_retries_per_task: number;
   avg_execution_time_ms: number;

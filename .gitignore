@@ -8,3 +8,5 @@ dist/
 build/
 .env
 .env.local
+backend/app/browser/screenshots/*.png
+backend/data/*.db

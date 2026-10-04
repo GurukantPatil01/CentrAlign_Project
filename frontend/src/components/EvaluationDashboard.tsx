@@ -124,6 +124,38 @@ export function EvaluationDashboard({ evaluation, onEvaluationCompleted }: Evalu
               </div>
               <div className="text-[10px] text-slate-500 mt-0.5">Policy Approval Gates</div>
             </div>
+
+            <div className="p-4 bg-white border border-slate-200 rounded shadow-2xs">
+              <div className="text-[10px] uppercase font-semibold text-slate-400">Browser Success Rate</div>
+              <div className="text-2xl font-bold text-blue-700 mt-1">
+                {evaluation.browser_success_rate ?? 100}%
+              </div>
+              <div className="text-[10px] text-slate-500 mt-0.5">Real Playwright Browser</div>
+            </div>
+
+            <div className="p-4 bg-white border border-slate-200 rounded shadow-2xs">
+              <div className="text-[10px] uppercase font-semibold text-slate-400">Browser Recovery Rate</div>
+              <div className="text-2xl font-bold text-emerald-700 mt-1">
+                {evaluation.browser_recovery_rate ?? 100}%
+              </div>
+              <div className="text-[10px] text-slate-500 mt-0.5">Timeout / Stale Element Recovery</div>
+            </div>
+
+            <div className="p-4 bg-white border border-slate-200 rounded shadow-2xs">
+              <div className="text-[10px] uppercase font-semibold text-slate-400">Memory Retrieval Rate</div>
+              <div className="text-2xl font-bold text-purple-700 mt-1">
+                {evaluation.memory_retrieval_rate ?? 100}%
+              </div>
+              <div className="text-[10px] text-slate-500 mt-0.5">Pre-Planning Relevance Filter</div>
+            </div>
+
+            <div className="p-4 bg-white border border-slate-200 rounded shadow-2xs">
+              <div className="text-[10px] uppercase font-semibold text-slate-400">Memory Persistence Rate</div>
+              <div className="text-2xl font-bold text-cyan-700 mt-1">
+                {evaluation.memory_persistence_rate ?? 100}%
+              </div>
+              <div className="text-[10px] text-slate-500 mt-0.5">Survives Process Restart</div>
+            </div>
           </div>
 
           {/* Secondary Performance Metrics */}

@@ -229,6 +229,45 @@ export function ExecutionView({
               <div className="font-mono text-slate-800 mt-0.5">{run.evidence?.length ?? 0} items captured</div>
             </div>
           </div>
+
+          {/* Relevant Company Memory */}
+          <div className="border border-slate-200 bg-white p-4 rounded shadow-2xs text-xs space-y-3">
+            <div className="flex items-center justify-between">
+              <div className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider flex items-center gap-1.5">
+                <Brain size={13} className="text-blue-600" />
+                <span>Relevant Memory ({run.relevant_memories?.length ?? 0})</span>
+              </div>
+              <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-blue-50 text-blue-700 border border-blue-200 font-semibold">
+                PLANNER
+              </span>
+            </div>
+
+            {run.relevant_memories && run.relevant_memories.length > 0 ? (
+              <div className="space-y-2">
+                {run.relevant_memories.slice(0, 3).map((mem) => (
+                  <div key={mem.id} className="p-2 bg-slate-50 rounded border border-slate-200 space-y-1">
+                    <div className="flex items-center justify-between text-[10px]">
+                      <span className="font-mono font-bold text-slate-800 truncate max-w-[120px]">{mem.key}</span>
+                      <span className="text-emerald-700 font-semibold">{Math.round(mem.confidence * 100)}%</span>
+                    </div>
+                    <div className="text-[11px] text-slate-600 line-clamp-2 leading-tight">{mem.content}</div>
+                  </div>
+                ))}
+                {run.relevant_memories.length > 3 && (
+                  <button
+                    onClick={() => setActiveTab("memory")}
+                    className="text-[11px] text-blue-600 hover:text-blue-800 font-medium block text-center w-full pt-1"
+                  >
+                    View all {run.relevant_memories.length} retrieved memories &rarr;
+                  </button>
+                )}
+              </div>
+            ) : (
+              <div className="text-slate-400 text-[11px] italic">
+                No prior memories retrieved for this entity/workflow.
+              </div>
+            )}
+          </div>
         </div>
 
         {/* Center Column (5 cols): Live Execution Timeline */}
@@ -368,6 +407,15 @@ export function ExecutionView({
             >
               Evidence
             </button>
+            <button
+              onClick={() => setActiveTab("memory")}
+              className={`px-2.5 py-1 rounded font-medium transition-colors flex items-center gap-1 ${
+                activeTab === "memory" ? "bg-slate-900 text-white" : "text-slate-600 hover:text-slate-900"
+              }`}
+            >
+              <Brain size={12} />
+              <span>Memory ({run.relevant_memories?.length ?? 0})</span>
+            </button>
           </div>
 
           {/* Active Tab Panel */}
@@ -418,6 +466,49 @@ export function ExecutionView({
           {activeTab === "verification" && <VerificationPanel verification={run.verification} />}
 
           {activeTab === "evidence" && <EvidencePanel run={run} />}
+
+          {activeTab === "memory" && (
+            <div className="border border-slate-200 bg-white rounded overflow-hidden shadow-2xs text-xs">
+              <div className="bg-slate-900 text-white px-4 py-3 flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Brain size={14} className="text-blue-400" />
+                  <span className="font-semibold tracking-wide uppercase text-[11px]">
+                    Relevant Corporate Memory Retrieved
+                  </span>
+                </div>
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-blue-950 text-blue-300 border border-blue-800">
+                  PRE-PLANNING CONTEXT
+                </span>
+              </div>
+
+              <div className="p-4 space-y-3">
+                {run.relevant_memories && run.relevant_memories.length > 0 ? (
+                  run.relevant_memories.map((mem) => (
+                    <div key={mem.id} className="p-3 bg-slate-50 rounded border border-slate-200 space-y-2">
+                      <div className="flex items-center justify-between">
+                        <span className="text-[10px] uppercase font-mono px-2 py-0.5 rounded bg-blue-100 text-blue-800 font-semibold border border-blue-200">
+                          {mem.type.replace(/_/g, " ")}
+                        </span>
+                        <span className="text-[11px] font-mono font-bold text-emerald-700">
+                          {Math.round(mem.confidence * 100)}% Confidence
+                        </span>
+                      </div>
+                      <div className="font-bold text-slate-900">{mem.title}</div>
+                      <div className="text-slate-700 leading-relaxed">{mem.content}</div>
+                      <div className="pt-2 border-t border-slate-200 flex items-center justify-between text-[10px] text-slate-500">
+                        <span className="truncate max-w-[200px]" title={mem.source}>Source: {mem.source}</span>
+                        <span className="font-mono text-slate-400">{mem.id}</span>
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <div className="p-6 text-center text-slate-400">
+                    No relevant corporate memory was retrieved for this task before planning.
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>
