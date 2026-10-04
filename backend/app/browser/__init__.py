@@ -1,0 +1,46 @@
+from backend.app.browser.actions import (
+    browser_back,
+    browser_click,
+    browser_extract,
+    browser_observe,
+    browser_open,
+    browser_screenshot,
+    browser_select,
+    browser_type,
+    browser_wait,
+)
+from backend.app.browser.errors import (
+    ActionTimeoutError,
+    BrowserCrashError,
+    BrowserError,
+    ElementNotFoundError,
+    InvalidInputError,
+    NavigationTimeoutError,
+    PageNotFoundError,
+    SessionExpiredError,
+    StalePageError,
+)
+from backend.app.browser.manager import BrowserManager, browser_manager
+
+__all__ = [
+    "BrowserManager",
+    "browser_manager",
+    "browser_open",
+    "browser_observe",
+    "browser_click",
+    "browser_type",
+    "browser_select",
+    "browser_extract",
+    "browser_screenshot",
+    "browser_back",
+    "browser_wait",
+    "BrowserError",
+    "ElementNotFoundError",
+    "PageNotFoundError",
+    "NavigationTimeoutError",
+    "StalePageError",
+    "ActionTimeoutError",
+    "InvalidInputError",
+    "BrowserCrashError",
+    "SessionExpiredError",
+]

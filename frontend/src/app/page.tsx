@@ -26,6 +26,7 @@ import { ToolCatalogView } from "@/components/ToolCatalogView";
 import { PolicyViewer } from "@/components/PolicyViewer";
 import { AuditLogView } from "@/components/AuditLogView";
 import { EnterpriseDataView } from "@/components/EnterpriseDataView";
+import { CompanyMemoryView } from "@/components/CompanyMemoryView";
 import { Cpu, Database, RefreshCw, ShieldCheck } from "lucide-react";
 
 export default function Home() {
@@ -141,6 +142,7 @@ export default function Home() {
     "new-task": "Worker Operations Console",
     "active-task": "Real-Time Agent Execution",
     "task-history": "Task Execution Traces",
+    "company-memory": "Persistent Company Memory",
     invoices: "Accounts Payable — Invoices",
     payments: "Disbursement Ledger — Payments",
     vendors: "Vendor Management",
@@ -202,6 +204,11 @@ export default function Home() {
               }}
               onRefresh={refreshAll}
             />
+          )}
+
+          {/* 3b. Company Memory View */}
+          {currentSection === "company-memory" && (
+            <CompanyMemoryView />
           )}
 
           {/* 4. Enterprise Tables */}

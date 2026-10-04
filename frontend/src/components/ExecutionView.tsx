@@ -6,6 +6,7 @@ import {
   AlertOctagon,
   AlertTriangle,
   ArrowRight,
+  Brain,
   Check,
   CheckCircle2,
   Clock,
@@ -39,7 +40,7 @@ interface ExecutionViewProps {
   onNewTaskClick: () => void;
 }
 
-type InspectorTab = "tool" | "reasoning" | "computer" | "verification" | "evidence";
+type InspectorTab = "tool" | "reasoning" | "computer" | "verification" | "evidence" | "memory";
 
 export function ExecutionView({
   run,

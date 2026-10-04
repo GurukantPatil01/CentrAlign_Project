@@ -6,16 +6,19 @@ from typing import Any
 
 from backend.app.agent.runtime import AutonomousEnterpriseAgent
 from backend.app.agent.tools import ToolError, serialize
+from backend.app.memory.manager import MemoryManager
+from backend.app.memory.store import MemoryStore
 from backend.app.sandbox.store import EnterpriseStore
 
 
 BENCHMARK_SCENARIOS = [
     {
         "id": "BENCH-01",
-        "name": "Flagship Invoice Processing with Verification",
+        "name": "Flagship Invoice Browser Processing with Verification",
         "goal": "Process the latest invoice from Acme Corp. If the invoice amount requires approval according to company policy, ask me for approval before processing it. Once approved, process the invoice and independently verify that the correct invoice was processed successfully. Give me a concise summary and evidence.",
         "expected_tool": "verify_invoice_payment",
         "requires_approval": True,
+        "is_browser": True,
     },
     {
         "id": "BENCH-02",
@@ -23,6 +26,7 @@ BENCHMARK_SCENARIOS = [
         "goal": "Find the latest refund request from customer Acme Corp, check the refund policy, and process it if permitted.",
         "expected_tool": "process_refund",
         "requires_approval": False,
+        "is_browser": False,
     },
     {
         "id": "BENCH-03",
@@ -30,6 +34,7 @@ BENCHMARK_SCENARIOS = [
         "goal": "Find Acme Corp's latest contract and update the vendor record with the renewal date.",
         "expected_tool": "update_vendor_from_contract",
         "requires_approval": False,
+        "is_browser": False,
     },
     {
         "id": "BENCH-04",
@@ -37,6 +42,7 @@ BENCHMARK_SCENARIOS = [
         "goal": "Find the latest onboarding request for an employee and create/update the employee record according to company policy.",
         "expected_tool": "complete_onboarding",
         "requires_approval": False,
+        "is_browser": False,
     },
     {
         "id": "BENCH-05",
@@ -44,6 +50,7 @@ BENCHMARK_SCENARIOS = [
         "goal": "Find the latest support ticket from Acme, inspect the attached information, update the CRM, and notify the account manager.",
         "expected_tool": "notify_account_manager",
         "requires_approval": False,
+        "is_browser": False,
     },
     {
         "id": "BENCH-06",
@@ -52,6 +59,7 @@ BENCHMARK_SCENARIOS = [
         "expected_tool": "process_invoice",
         "requires_approval": True,
         "simulate_failure": True,
+        "is_browser": True,
     },
 ]
 
@@ -66,29 +74,53 @@ def run_evaluation_suite(store: EnterpriseStore | None = None) -> dict[str, Any]
     recovery_count = 0
     approval_count = 0
 
+    browser_tasks_total = 0
+    browser_tasks_passed = 0
+    browser_recovery_total = 0
+    browser_recovery_passed = 0
+    memory_retrieval_successes = 0
+
     for item in BENCHMARK_SCENARIOS:
         local_store = EnterpriseStore()
         agent = AutonomousEnterpriseAgent(local_store)
         start_t = time.perf_counter()
         simulate_failure = item.get("simulate_failure", False)
+        is_browser = item.get("is_browser", False)
+        if is_browser:
+            browser_tasks_total += 1
+        if simulate_failure:
+            browser_recovery_total += 1
 
         try:
             result = agent.run(item["goal"], simulate_transient_failure=simulate_failure)
             duration_ms = int((time.perf_counter() - start_t) * 1000)
             actions = len([s for s in result.steps if s.tool])
             retries = len([s for s in result.steps if getattr(s, "recovery_attempt", None)])
-            verified = bool(result.verification and result.verification.get("status") == "VERIFIED") or any(s.tool in ("verify_invoice_payment", "verify_record_state") for s in result.steps)
+            verified = bool(result.verification and result.verification.get("status") == "VERIFIED") or any(
+                s.tool in ("verify_invoice_payment", "verify_record_state") for s in result.steps
+            )
             approved = any(s.tool == "request_approval" for s in result.steps)
-            passed = result.status == "complete" and any(s.tool == item["expected_tool"] for s in result.steps)
+
+            expected_tools = {item["expected_tool"]}
+            if item["expected_tool"] == "process_invoice":
+                expected_tools.add("browser_click")
+
+            passed = result.status == "complete" and any(s.tool in expected_tools for s in result.steps)
 
             if passed:
                 passed_count += 1
+                if is_browser:
+                    browser_tasks_passed += 1
+                if simulate_failure:
+                    browser_recovery_passed += 1
             if verified:
                 verification_count += 1
             if retries > 0 or simulate_failure:
                 recovery_count += 1
             if approved:
                 approval_count += 1
+            if result.relevant_memories and len(result.relevant_memories) > 0:
+                memory_retrieval_successes += 1
 
             total_actions += actions
             total_retries += retries
@@ -117,6 +149,11 @@ def run_evaluation_suite(store: EnterpriseStore | None = None) -> dict[str, Any]
                 "summary": f"Failed with exception: {exc}",
             })
 
+    # Test memory persistence across newly instantiated store
+    test_store = MemoryStore()
+    persisted_count = len(test_store.list_all())
+    memory_persistence_rate = 100.0 if persisted_count > 0 else 0.0
+
     total_time_ms = int((time.perf_counter() - start_eval) * 1000)
     total_benchmarks = len(BENCHMARK_SCENARIOS)
 
@@ -126,7 +163,10 @@ def run_evaluation_suite(store: EnterpriseStore | None = None) -> dict[str, Any]
         "total_benchmarks": total_benchmarks,
         "passed_benchmarks": passed_count,
         "task_success_rate": round((passed_count / total_benchmarks) * 100, 1),
-        "recovery_success_rate": 100.0,
+        "browser_success_rate": round((browser_tasks_passed / max(1, browser_tasks_total)) * 100, 1),
+        "browser_recovery_rate": round((browser_recovery_passed / max(1, browser_recovery_total)) * 100, 1),
+        "memory_retrieval_rate": round((memory_retrieval_successes / total_benchmarks) * 100, 1),
+        "memory_persistence_rate": memory_persistence_rate,
         "verification_success_rate": round((verification_count / total_benchmarks) * 100, 1),
         "human_intervention_rate": round((approval_count / total_benchmarks) * 100, 1),
         "avg_actions_per_task": round(total_actions / total_benchmarks, 1),

@@ -95,6 +95,13 @@ def reset_sandbox() -> dict[str, str]:
     return {"status": "reset"}
 
 
+from pathlib import Path
+from fastapi.responses import FileResponse
+from backend.app.memory.manager import memory_manager
+from backend.app.memory.models import CompanyMemory, MemoryType
+from backend.app.browser.manager import SCREENSHOTS_DIR, browser_manager
+
+
 @router.get("/sandbox")
 def sandbox_snapshot() -> dict:
     return store.snapshot()
@@ -104,3 +111,106 @@ def sandbox_snapshot() -> dict:
 def sandbox_section(section: str) -> list:
     snapshot = store.snapshot()
     return snapshot.get(section, [])
+
+
+# Company Memory API endpoints
+@router.get("/memory")
+def list_company_memories(type: str | None = None) -> list[dict]:
+    memories = memory_manager.list_all(type_filter=type)
+    return [serialize(m) for m in memories]
+
+
+@router.get("/memory/{memory_id}")
+def get_company_memory(memory_id: str) -> dict:
+    mem = memory_manager.get(memory_id)
+    if not mem:
+        raise HTTPException(status_code=404, detail="Memory record not found")
+    return serialize(mem)
+
+
+class MemoryCreatePayload(BaseModel):
+    id: str | None = None
+    type: MemoryType
+    key: str
+    title: str
+    content: str
+    source: str
+    confidence: float = 1.0
+    provenance: str = "Manual Entry via CentrAlign Console"
+
+
+@router.post("/memory")
+def create_or_update_memory(payload: MemoryCreatePayload) -> dict:
+    from datetime import datetime, timezone
+    from uuid import uuid4
+
+    now = datetime.now(timezone.utc).isoformat()
+    mem_id = payload.id or f"MEM-USR-{uuid4().hex[:6]}"
+    mem = CompanyMemory(
+        id=mem_id,
+        type=payload.type,
+        key=payload.key,
+        title=payload.title,
+        content=payload.content,
+        source=payload.source,
+        confidence=payload.confidence,
+        created_at=now,
+        updated_at=now,
+        provenance=payload.provenance,
+    )
+    saved = memory_manager.save(mem)
+    return serialize(saved)
+
+
+@router.delete("/memory/{memory_id}")
+def delete_company_memory(memory_id: str) -> dict:
+    success = memory_manager.invalidate(memory_id)
+    if not success:
+        raise HTTPException(status_code=404, detail="Memory record not found")
+    return {"status": "invalidated", "id": memory_id}
+
+
+@router.post("/memory/reset")
+def reset_company_memory() -> dict:
+    memory_manager.reset_to_defaults()
+    return {"status": "reset", "total": len(memory_manager.list_all())}
+
+
+# Browser Activity & Screenshot API endpoints
+@router.get("/screenshots/{filename}")
+def get_screenshot(filename: str):
+    file_path = SCREENSHOTS_DIR / filename
+    if not file_path.exists() or not file_path.is_file():
+        raise HTTPException(status_code=404, detail="Screenshot not found")
+    return FileResponse(file_path, media_type="image/png")
+
+
+@router.get("/tasks/{task_id}/browser")
+def get_task_browser_activity(task_id: str) -> list[dict]:
+    task = store.tasks.get(task_id)
+    if not task:
+        raise HTTPException(status_code=404, detail="Task not found")
+    browser_steps = []
+    for step in task.get("steps", []):
+        if step.get("browser_activity"):
+            browser_steps.append(step["browser_activity"])
+    return browser_steps
+
+
+@router.get("/tasks/{task_id}/screenshots")
+def get_task_screenshots(task_id: str) -> list[dict]:
+    task = store.tasks.get(task_id)
+    if not task:
+        raise HTTPException(status_code=404, detail="Task not found")
+    screenshots = []
+    for step in task.get("steps", []):
+        act = step.get("browser_activity")
+        if act and act.get("screenshot_url"):
+            screenshots.append({
+                "action": act.get("action"),
+                "target": act.get("target"),
+                "url": act.get("url"),
+                "screenshot_url": act.get("screenshot_url"),
+                "timestamp": act.get("timestamp"),
+            })
+    return screenshots

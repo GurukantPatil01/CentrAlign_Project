@@ -1,0 +1,88 @@
+from __future__ import annotations
+
+from datetime import datetime, timezone
+from backend.app.memory.models import CompanyMemory, MemoryType
+
+
+def get_default_company_memories() -> list[CompanyMemory]:
+    now = datetime.now(timezone.utc).isoformat()
+    return [
+        CompanyMemory(
+            id="MEM-POL-001",
+            type=MemoryType.COMPANY_POLICY,
+            key="invoice_approval_threshold",
+            title="Invoice Approval Threshold Policy",
+            content="Invoices at or above ₹100,000 require formal finance supervisor approval before ERP payment disbursement. Invoices below ₹100,000 may be processed autonomously without human authorization.",
+            source="Corporate Finance Governance Policy (POL-INV-2026)",
+            confidence=1.0,
+            created_at=now,
+            updated_at=now,
+            metadata={"domain": "invoice", "threshold": 100000, "currency": "INR"},
+            provenance="Official Enterprise Finance Handbook v4.2",
+        ),
+        CompanyMemory(
+            id="MEM-POL-002",
+            type=MemoryType.COMPANY_POLICY,
+            key="refund_policy_threshold",
+            title="Customer Refund SLA Policy",
+            content="Customer refund requests up to ₹25,000 may be approved autonomously when substantiated by service latency or duplicate billing. Requests above ₹25,000 require department head sign-off.",
+            source="Customer Operations SLA Manual (POL-REF-2026)",
+            confidence=1.0,
+            created_at=now,
+            updated_at=now,
+            metadata={"domain": "refund", "threshold": 25000, "currency": "INR"},
+            provenance="Customer Operations Guidelines 2026",
+        ),
+        CompanyMemory(
+            id="MEM-ENT-001",
+            type=MemoryType.ENTITY,
+            key="vendor_acme_corp",
+            title="Acme Corp Vendor Profile",
+            content="Acme Corp (VEN-ACME) is an authorized tier-1 infrastructure and automation vendor. Standard terms: Net 30. Verified payment method: Corporate Bank Wire Transfer. Account executive: Mira Shah.",
+            source="Enterprise Vendor Registry",
+            confidence=1.0,
+            created_at=now,
+            updated_at=now,
+            metadata={"vendor_id": "VEN-ACME", "payment_method": "bank_transfer", "net_terms": 30},
+            provenance="Verified ERP Vendor Master Master Record",
+        ),
+        CompanyMemory(
+            id="MEM-FACT-001",
+            type=MemoryType.COMPANY_FACT,
+            key="finance_operations_team",
+            title="Finance Operations Structure",
+            content="Finance Operations oversees accounts payable, disbursements, and statutory reconciliation. High-value transactions escalate to the Finance Supervisor queue.",
+            source="Company Organization Directory",
+            confidence=1.0,
+            created_at=now,
+            updated_at=now,
+            metadata={"department": "Finance", "supervisor_role": "Finance Supervisor"},
+            provenance="HR Organizational Master Database",
+        ),
+        CompanyMemory(
+            id="MEM-WORK-001",
+            type=MemoryType.WORKFLOW_KNOWLEDGE,
+            key="invoice_processing_flow",
+            title="Invoice Processing Standard Operating Procedure",
+            content="Invoice processing requires: 1. Locate latest invoice; 2. Cross-reference vendor validity; 3. Verify policy authorization threshold; 4. Disburse via ERP or portal; 5. Reconcile payment record.",
+            source="SOP-FIN-08: Automated Accounts Payable Operations",
+            confidence=0.98,
+            created_at=now,
+            updated_at=now,
+            metadata={"workflow": "invoice", "verification_required": True},
+            provenance="Operations Engineering SOP Repository",
+        ),
+        CompanyMemory(
+            id="MEM-FAIL-001",
+            type=MemoryType.FAILURE_PATTERN,
+            key="erp_gateway_timeout_pattern",
+            title="ERP Payment Gateway Timeout Recovery Pattern",
+            content="When ERP payment disburse gateway yields HTTP 504 Gateway Timeout or transient reset, target transaction is idempotent. Recovery strategy: perform single automatic retry with backoff before escalating.",
+            source="Site Reliability Engineering Incident Playbook",
+            confidence=0.95,
+            created_at=now,
+            updated_at=now,
+            metadata={"tool": "process_invoice", "error_code": 504, "strategy": "idempotent_retry", "max_retries": 1},
+            provenance="Post-Incident Review 2026-Q2 ERP Gateway Stability",
+        ),
+    ]

@@ -65,6 +65,23 @@ export interface TaskMetrics {
   duration_ms: number;
 }
 
+export interface CompanyMemory {
+  id: string;
+  type: "COMPANY_POLICY" | "COMPANY_FACT" | "ENTITY" | "WORKFLOW_KNOWLEDGE" | "TOOL_KNOWLEDGE" | "PREVIOUS_OUTCOME" | "FAILURE_PATTERN" | string;
+  key: string;
+  title: string;
+  content: string;
+  source: string;
+  confidence: number;
+  created_at: string;
+  updated_at: string;
+  last_used_at: string;
+  metadata?: Record<string, unknown>;
+  provenance: string;
+  tasks_used: string[];
+  is_valid: boolean;
+}
+
 export interface AgentRun {
   run_id: string;
   goal: string;
@@ -75,6 +92,7 @@ export interface AgentRun {
   approval_request?: ApprovalRequest | null;
   verification?: VerificationSummary | null;
   metrics?: TaskMetrics;
+  relevant_memories?: CompanyMemory[];
 }
 
 export interface ToolMetadata {
@@ -204,5 +222,26 @@ export async function resetSandbox(): Promise<{ status: string }> {
     method: "POST",
   });
   if (!res.ok) throw new Error(`Reset failed: ${res.statusText}`);
+  return res.json();
+}
+
+export async function fetchMemories(type?: string): Promise<CompanyMemory[]> {
+  const url = type && type !== "ALL" ? `${API_BASE}/memory?type=${encodeURIComponent(type)}` : `${API_BASE}/memory`;
+  const res = await fetch(url, { cache: "no-store" });
+  if (!res.ok) throw new Error(`Failed to fetch company memories: ${res.statusText}`);
+  return res.json();
+}
+
+export async function deleteMemory(id: string): Promise<{ status: string }> {
+  const res = await fetch(`${API_BASE}/memory/${id}`, {
+    method: "DELETE",
+  });
+  if (!res.ok) throw new Error(`Failed to delete memory: ${res.statusText}`);
+  return res.json();
+}
+
+export async function fetchTaskBrowserActivity(taskId: string): Promise<BrowserActivity[]> {
+  const res = await fetch(`${API_BASE}/tasks/${taskId}/browser`, { cache: "no-store" });
+  if (!res.ok) return [];
   return res.json();
 }

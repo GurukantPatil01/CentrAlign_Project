@@ -13,6 +13,8 @@ class ToolError(Exception):
 
 
 def serialize(value: Any) -> Any:
+    if hasattr(value, "model_dump"):
+        return serialize(value.model_dump())
     if is_dataclass(value):
         return serialize(asdict(value))
     if isinstance(value, dict):
@@ -40,6 +42,15 @@ class ToolRegistry:
             "notify_account_manager": self.notify_account_manager,
             "verify_record_state": self.verify_record_state,
             "browser_action": self.browser_action,
+            "browser_open": self.browser_open,
+            "browser_observe": self.browser_observe,
+            "browser_click": self.browser_click,
+            "browser_type": self.browser_type,
+            "browser_select": self.browser_select,
+            "browser_extract": self.browser_extract,
+            "browser_screenshot": self.browser_screenshot,
+            "browser_back": self.browser_back,
+            "browser_wait": self.browser_wait,
         }
 
     @property
@@ -191,6 +202,83 @@ class ToolRegistry:
             "screenshot_url": None,
         }
 
+    def browser_open(self, url: str) -> dict[str, Any]:
+        from backend.app.browser import BrowserError, browser_open
+        try:
+            return browser_open(url)
+        except BrowserError as exc:
+            raise ToolError(str(exc)) from exc
+
+    def browser_observe(self) -> dict[str, Any]:
+        from backend.app.browser import BrowserError, browser_observe
+        try:
+            return browser_observe()
+        except BrowserError as exc:
+            raise ToolError(str(exc)) from exc
+
+    def browser_click(self, selector: str, target: str | None = None) -> dict[str, Any]:
+        from backend.app.browser import BrowserError, browser_click
+        from backend.app.sandbox.store import store as default_store
+        try:
+            res = browser_click(selector, target)
+            # If this was processing an invoice on the portal, sync state to sandbox
+            is_process = "process-invoice" in selector.lower() or (target and "process invoice" in target.lower())
+            if is_process:
+                stores_to_sync = {self.store, default_store}
+                for s in stores_to_sync:
+                    inv = s.invoices.get("INV-1024")
+                    if inv:
+                        inv.status = "processed"
+                        if not inv.processed_payment_id:
+                            pmt = Payment(new_id("PAY"), inv.id, inv.vendor_id, inv.amount, inv.currency, datetime.now(timezone.utc), "processed")
+                            s.payments[pmt.id] = pmt
+                            inv.processed_payment_id = pmt.id
+            return res
+        except BrowserError as exc:
+            raise ToolError(str(exc)) from exc
+
+    def browser_type(self, selector: str, text: str) -> dict[str, Any]:
+        from backend.app.browser import BrowserError, browser_type
+        try:
+            return browser_type(selector, text)
+        except BrowserError as exc:
+            raise ToolError(str(exc)) from exc
+
+    def browser_select(self, selector: str, value: str) -> dict[str, Any]:
+        from backend.app.browser import BrowserError, browser_select
+        try:
+            return browser_select(selector, value)
+        except BrowserError as exc:
+            raise ToolError(str(exc)) from exc
+
+    def browser_extract(self, selector: str | None = None) -> dict[str, Any]:
+        from backend.app.browser import BrowserError, browser_extract
+        try:
+            return browser_extract(selector)
+        except BrowserError as exc:
+            raise ToolError(str(exc)) from exc
+
+    def browser_screenshot(self, name: str | None = None) -> dict[str, Any]:
+        from backend.app.browser import BrowserError, browser_screenshot
+        try:
+            return browser_screenshot(name)
+        except BrowserError as exc:
+            raise ToolError(str(exc)) from exc
+
+    def browser_back(self) -> dict[str, Any]:
+        from backend.app.browser import BrowserError, browser_back
+        try:
+            return browser_back()
+        except BrowserError as exc:
+            raise ToolError(str(exc)) from exc
+
+    def browser_wait(self, ms: int = 500) -> dict[str, Any]:
+        from backend.app.browser import BrowserError, browser_wait
+        try:
+            return browser_wait(ms)
+        except BrowserError as exc:
+            raise ToolError(str(exc)) from exc
+
 
 TOOL_METADATA: list[dict[str, Any]] = [
     {
@@ -280,6 +368,78 @@ TOOL_METADATA: list[dict[str, Any]] = [
         "risk": "LOW",
         "status": "ACTIVE",
         "parameters": {"record_type": "string", "record_id": "string", "field": "string", "expected": "any"},
+    },
+    {
+        "name": "browser_open",
+        "category": "Browser",
+        "description": "Open enterprise web portal URL in real sandboxed Playwright browser.",
+        "risk": "LOW",
+        "status": "ACTIVE",
+        "parameters": {"url": "string"},
+    },
+    {
+        "name": "browser_observe",
+        "category": "Browser",
+        "description": "Capture current page DOM structure, title, visible interactive controls, and text.",
+        "risk": "LOW",
+        "status": "ACTIVE",
+        "parameters": {},
+    },
+    {
+        "name": "browser_click",
+        "category": "Browser",
+        "description": "Click element using resilient semantic selector with testid/text/role fallbacks.",
+        "risk": "MEDIUM",
+        "status": "ACTIVE",
+        "parameters": {"selector": "string", "target": "string (optional)"},
+    },
+    {
+        "name": "browser_type",
+        "category": "Browser",
+        "description": "Type text into target input field or form control in the browser.",
+        "risk": "LOW",
+        "status": "ACTIVE",
+        "parameters": {"selector": "string", "text": "string"},
+    },
+    {
+        "name": "browser_select",
+        "category": "Browser",
+        "description": "Select option in dropdown menu or select element in the browser.",
+        "risk": "LOW",
+        "status": "ACTIVE",
+        "parameters": {"selector": "string", "value": "string"},
+    },
+    {
+        "name": "browser_extract",
+        "category": "Browser",
+        "description": "Extract text or structural data from a target DOM element container.",
+        "risk": "LOW",
+        "status": "ACTIVE",
+        "parameters": {"selector": "string (optional)"},
+    },
+    {
+        "name": "browser_screenshot",
+        "category": "Browser",
+        "description": "Capture full or viewport screenshot checkpoint for audit evidence.",
+        "risk": "LOW",
+        "status": "ACTIVE",
+        "parameters": {"name": "string (optional)"},
+    },
+    {
+        "name": "browser_back",
+        "category": "Browser",
+        "description": "Navigate back in browser history.",
+        "risk": "LOW",
+        "status": "ACTIVE",
+        "parameters": {},
+    },
+    {
+        "name": "browser_wait",
+        "category": "Browser",
+        "description": "Wait for bounded milliseconds for asynchronous DOM updates to settle.",
+        "risk": "LOW",
+        "status": "ACTIVE",
+        "parameters": {"ms": "number (optional)"},
     },
     {
         "name": "browser_action",

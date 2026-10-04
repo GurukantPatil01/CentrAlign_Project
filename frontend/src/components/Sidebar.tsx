@@ -5,6 +5,7 @@ import {
   Activity,
   AlertTriangle,
   BookOpen,
+  Brain,
   CheckCircle,
   Clock,
   Cpu,
@@ -26,6 +27,7 @@ export type NavSection =
   | "new-task"
   | "active-task"
   | "task-history"
+  | "company-memory"
   | "invoices"
   | "payments"
   | "vendors"
@@ -56,6 +58,7 @@ export function Sidebar({ currentSection, onSelectSection, hasActiveTask, waitin
       badgeColor: waitingApproval ? "bg-amber-500 text-white" : "bg-blue-600 text-white",
     },
     { id: "task-history" as NavSection, label: "Task History", icon: Clock },
+    { id: "company-memory" as NavSection, label: "Company Memory", icon: Brain },
   ];
 
   const enterpriseItems = [
