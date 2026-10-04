@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import asdict, is_dataclass
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Any, Callable
 
 from backend.app.sandbox.models import ApprovalStatus, Employee, Payment, new_id
@@ -39,6 +39,7 @@ class ToolRegistry:
             "update_crm_from_ticket": self.update_crm_from_ticket,
             "notify_account_manager": self.notify_account_manager,
             "verify_record_state": self.verify_record_state,
+            "browser_action": self.browser_action,
         }
 
     @property
@@ -178,3 +179,114 @@ class ToolRegistry:
         actual = getattr(collection[record_id], field)
         serialized_actual = serialize(actual)
         return {"verified": serialized_actual == expected, "record": serialize(collection[record_id]), "field": field, "actual": serialized_actual}
+
+    def browser_action(self, action: str, target: str, url: str = "https://erp.acme.internal/invoices", value: str | None = None) -> dict[str, Any]:
+        return {
+            "action": action.upper(),
+            "target": target,
+            "url": url,
+            "value": value,
+            "result": f"Action '{action.upper()}' on '{target}' completed successfully at {url}",
+            "timestamp": datetime.now(timezone.utc).isoformat(),
+            "screenshot_url": None,
+        }
+
+
+TOOL_METADATA: list[dict[str, Any]] = [
+    {
+        "name": "search_records",
+        "category": "Enterprise",
+        "description": "Query company database collections (invoices, vendors, payments, customers, tickets).",
+        "risk": "LOW",
+        "status": "ACTIVE",
+        "parameters": {"record_type": "string", "query": "string (optional)", "latest": "boolean (optional)"},
+    },
+    {
+        "name": "get_policy",
+        "category": "Policy",
+        "description": "Retrieve governing company policy guidelines for a business domain.",
+        "risk": "LOW",
+        "status": "ACTIVE",
+        "parameters": {"domain": "string (invoice | refund | onboarding | support)"},
+    },
+    {
+        "name": "request_approval",
+        "category": "Approval",
+        "description": "Submit high-risk action proposal to human authorizer with policy justification.",
+        "risk": "HIGH",
+        "status": "ACTIVE",
+        "parameters": {"subject": "string", "reason": "string", "amount": "number (optional)"},
+    },
+    {
+        "name": "process_invoice",
+        "category": "Enterprise",
+        "description": "Execute invoice settlement and issue corresponding payment record in ERP.",
+        "risk": "HIGH",
+        "status": "ACTIVE",
+        "parameters": {"invoice_id": "string", "approval": "object (optional)"},
+    },
+    {
+        "name": "verify_invoice_payment",
+        "category": "Verification",
+        "description": "Independently cross-verify payment record against original invoice details.",
+        "risk": "LOW",
+        "status": "ACTIVE",
+        "parameters": {"invoice_id": "string"},
+    },
+    {
+        "name": "process_refund",
+        "category": "Enterprise",
+        "description": "Process customer refund and update customer balance ledger.",
+        "risk": "HIGH",
+        "status": "ACTIVE",
+        "parameters": {"refund_id": "string"},
+    },
+    {
+        "name": "update_vendor_from_contract",
+        "category": "Enterprise",
+        "description": "Synchronize vendor renewal terms and dates with executed contract records.",
+        "risk": "MEDIUM",
+        "status": "ACTIVE",
+        "parameters": {"contract_id": "string"},
+    },
+    {
+        "name": "complete_onboarding",
+        "category": "Enterprise",
+        "description": "Provision active employee record upon approved onboarding request.",
+        "risk": "MEDIUM",
+        "status": "ACTIVE",
+        "parameters": {"onboarding_id": "string"},
+    },
+    {
+        "name": "update_crm_from_ticket",
+        "category": "Enterprise",
+        "description": "Append investigation findings and operational notes to CRM customer account.",
+        "risk": "LOW",
+        "status": "ACTIVE",
+        "parameters": {"ticket_id": "string", "note": "string"},
+    },
+    {
+        "name": "notify_account_manager",
+        "category": "Notification",
+        "description": "Send priority alert notification to designated customer account manager.",
+        "risk": "LOW",
+        "status": "ACTIVE",
+        "parameters": {"ticket_id": "string"},
+    },
+    {
+        "name": "verify_record_state",
+        "category": "Verification",
+        "description": "Independently audit specific attribute state on target enterprise record.",
+        "risk": "LOW",
+        "status": "ACTIVE",
+        "parameters": {"record_type": "string", "record_id": "string", "field": "string", "expected": "any"},
+    },
+    {
+        "name": "browser_action",
+        "category": "Browser",
+        "description": "Simulated computer/browser navigation and interaction within enterprise web portals.",
+        "risk": "MEDIUM",
+        "status": "ACTIVE",
+        "parameters": {"action": "string (click | navigate | input)", "target": "string", "url": "string"},
+    },
+]

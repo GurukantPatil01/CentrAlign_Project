@@ -1,12 +1,20 @@
 @import "tailwindcss";
 
 @theme {
-  --color-ink: #17201B;
-  --color-panel: #F7F4EE;
-  --color-moss: #426B52;
-  --color-clay: #A35D3A;
-  --color-steel: #496577;
-  --color-gold: #C99A2E;
+  --color-brand-primary: #0F172A;
+  --color-brand-accent: #2563EB;
+  --color-surface-bg: #F8FAFC;
+  --color-surface-card: #FFFFFF;
+  --color-surface-sidebar: #0F172A;
+  --color-border-subtle: #E2E8F0;
+  --color-border-medium: #CBD5E1;
+  --color-text-main: #0F172A;
+  --color-text-muted: #64748B;
+  --color-text-dim: #94A3B8;
+  --color-status-success: #059669;
+  --color-status-warning: #D97706;
+  --color-status-danger: #DC2626;
+  --color-status-info: #2563EB;
 }
 
 * {
@@ -15,12 +23,31 @@
 
 body {
   margin: 0;
-  color: #17201b;
-  background: #ede8dd;
+  color: #0f172a;
+  background-color: #f8fafc;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
 }
 
-button,
-textarea,
-input {
-  font: inherit;
+code, pre, kbd, samp {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+}
+
+/* Custom compact scrollbars for enterprise logs & code */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
 }

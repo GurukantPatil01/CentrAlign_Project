@@ -85,6 +85,8 @@ class EnterpriseStore:
             "POL-SUP": Policy("POL-SUP", "Support Escalation Policy", "support", "- enterprise customer tickets must update the CRM with findings\n- notify the account manager for customer-impacting incidents\n- close the ticket only after CRM update and notification", date(2026, 7, 18)),
         }
         self.audit: list[AuditRecord] = []
+        self.tasks: dict[str, dict[str, Any]] = {}
+        self.evaluations: list[dict[str, Any]] = []
 
     def snapshot(self) -> dict[str, Any]:
         return {
@@ -99,6 +101,7 @@ class EnterpriseStore:
             "tickets": [_json(t) for t in self.tickets.values()],
             "policies": [_json(p) for p in self.policies.values()],
             "audit": [_json(a) for a in self.audit],
+            "tasks": list(self.tasks.values()),
         }
 
     def record_audit(self, run_id: str, action: str, details: dict[str, Any]) -> AuditRecord:
