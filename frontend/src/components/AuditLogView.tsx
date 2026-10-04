@@ -26,35 +26,35 @@ export function AuditLogView({ records }: AuditLogViewProps) {
   }
 
   return (
-    <div className="space-y-4">
+    <div className="flex-1 min-h-0 flex flex-col gap-3 overflow-hidden">
       {/* Header */}
-      <div className="border border-[#1e2026] bg-[#111216] p-5 rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
+      <div className="border border-[#1e2026] bg-[#111216] p-4 rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs shrink-0">
         <div>
           <div className="flex items-center gap-1.5 text-[#00d4ff] font-semibold tracking-wider uppercase text-[10px] font-mono">
             <FileText size={13} />
             <span>Immutable Regulatory Audit Trail</span>
           </div>
-          <h2 className="text-xl font-bold text-white mt-1 tracking-tight">Enterprise Audit Log & Trace Records</h2>
-          <p className="text-[#8c909c] mt-0.5">
+          <h2 className="text-lg font-bold text-white mt-0.5 tracking-tight">Enterprise Audit Log & Trace Records</h2>
+          <p className="text-[#8c909c] text-[11px]">
             Every decision, tool execution, human approval, and recovery is cryptographically tracked in sequence.
           </p>
         </div>
 
         {/* Search */}
-        <div className="relative min-w-[240px]">
-          <Search size={13} className="absolute left-3 top-3 text-[#555863]" />
+        <div className="relative min-w-[220px] shrink-0">
+          <Search size={13} className="absolute left-3 top-2.5 text-[#555863]" />
           <input
             type="text"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             placeholder="Search audit records..."
-            className="w-full pl-9 pr-3 py-2 rounded-xl bg-[#0b0c0f] border border-[#1e2026] text-xs text-white placeholder-[#555863] focus:outline-none focus:border-[#00d4ff]"
+            className="w-full pl-8 pr-3 py-1.5 rounded-lg bg-[#0b0c0f] border border-[#1e2026] text-xs text-white placeholder-[#555863] focus:outline-none focus:border-[#00d4ff]"
           />
         </div>
       </div>
 
       {/* Main Table */}
-      <div className="border border-[#1e2026] bg-[#111216] rounded-2xl overflow-x-auto text-xs">
+      <div className="flex-1 min-h-0 border border-[#1e2026] bg-[#111216] rounded-xl overflow-y-auto overflow-x-auto text-xs">
         <table className="w-full text-left">
           <thead className="bg-[#0b0c0f] border-b border-[#1e2026] text-[#8c909c] text-[10px] font-mono uppercase tracking-wider font-semibold">
             <tr>

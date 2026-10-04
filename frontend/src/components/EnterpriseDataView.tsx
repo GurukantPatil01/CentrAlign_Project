@@ -107,50 +107,50 @@ export function EnterpriseDataView({ sectionTitle, data }: EnterpriseDataViewPro
   }
 
   return (
-    <div className="space-y-4">
+    <div className="flex-1 min-h-0 flex flex-col gap-3 overflow-hidden">
       {/* Header Card */}
-      <div className="border border-[#1e2026] bg-[#111216] p-5 rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
+      <div className="border border-[#1e2026] bg-[#111216] p-4 rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs shrink-0">
         <div>
           <div className="flex items-center gap-1.5 text-[#00d4ff] font-semibold tracking-wider uppercase text-[10px] font-mono">
             <Database size={13} />
             <span>Master Enterprise Database</span>
           </div>
-          <h2 className="text-xl font-bold text-white mt-1 capitalize tracking-tight">
+          <h2 className="text-lg font-bold text-white mt-0.5 capitalize tracking-tight">
             {sectionTitle} ({data.length} Records)
           </h2>
-          <p className="text-[#8c909c] mt-0.5">
+          <p className="text-[#8c909c] text-[11px]">
             Click any row to open the complete record details and live portal view.
           </p>
         </div>
 
         {/* Search & Actions */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 shrink-0">
           {isInvoiceSection && (
             <a
               href="http://localhost:8000/portal/invoices"
               target="_blank"
               rel="noreferrer"
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-[#00d4ff]/30 bg-[#0c2338] text-[#00d4ff] text-xs font-semibold hover:bg-[#10304c] transition-colors shrink-0"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-[#00d4ff]/30 bg-[#0c2338] text-[#00d4ff] text-xs font-semibold hover:bg-[#10304c] transition-colors shrink-0"
             >
               <Globe size={13} />
               <span>Live Portal ↗</span>
             </a>
           )}
-          <div className="relative min-w-[220px]">
-            <Search size={13} className="absolute left-3 top-3 text-[#555863]" />
+          <div className="relative min-w-[200px]">
+            <Search size={13} className="absolute left-3 top-2.5 text-[#555863]" />
             <input
               type="text"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               placeholder={`Filter ${sectionTitle}...`}
-              className="w-full pl-9 pr-3 py-2 rounded-xl bg-[#0b0c0f] border border-[#1e2026] text-xs text-white placeholder-[#555863] focus:outline-none focus:border-[#00d4ff]"
+              className="w-full pl-8 pr-3 py-1.5 rounded-lg bg-[#0b0c0f] border border-[#1e2026] text-xs text-white placeholder-[#555863] focus:outline-none focus:border-[#00d4ff]"
             />
           </div>
         </div>
       </div>
 
-      {/* Table Card */}
-      <div className="border border-[#1e2026] bg-[#111216] rounded-2xl overflow-x-auto text-xs">
+      {/* Table Card (Scrollable inside its card) */}
+      <div className="flex-1 min-h-0 border border-[#1e2026] bg-[#111216] rounded-xl overflow-y-auto overflow-x-auto text-xs">
         <table className="w-full text-left">
           <thead className="bg-[#0b0c0f] border-b border-[#1e2026] text-[#8c909c] text-[10px] font-mono uppercase tracking-wider font-semibold">
             <tr>

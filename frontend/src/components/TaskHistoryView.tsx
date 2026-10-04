@@ -22,24 +22,24 @@ export function TaskHistoryView({ tasks, onSelectTask, onRefresh }: TaskHistoryV
   });
 
   return (
-    <div className="space-y-4">
+    <div className="flex-1 min-h-0 flex flex-col gap-3 overflow-hidden">
       {/* Header and Filters */}
-      <div className="border border-[#1e2026] bg-[#111216] p-5 rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
+      <div className="border border-[#1e2026] bg-[#111216] p-4 rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs shrink-0">
         <div>
-          <h2 className="text-xl font-bold text-white tracking-tight">Task Execution History</h2>
-          <p className="text-[#8c909c] mt-0.5">
+          <h2 className="text-lg font-bold text-white tracking-tight">Task Execution History</h2>
+          <p className="text-[#8c909c] text-[11px]">
             Audit history of all dispatched autonomous objectives and outcomes.
           </p>
         </div>
 
         {/* Filters */}
-        <div className="flex items-center gap-1.5 bg-[#0b0c0f] p-1.5 rounded-xl border border-[#1e2026]">
+        <div className="flex items-center gap-1.5 bg-[#0b0c0f] p-1 rounded-lg border border-[#1e2026] shrink-0">
           <Filter size={12} className="text-[#555863] ml-1.5" />
           {["all", "complete", "waiting_approval", "rejected"].map((f) => (
             <button
               key={f}
               onClick={() => setFilter(f)}
-              className={`px-3 py-1 rounded-lg capitalize font-medium transition-all text-xs ${
+              className={`px-2.5 py-1 rounded-md capitalize font-medium transition-all text-xs ${
                 filter === f
                   ? "bg-[#16181d] text-[#00d4ff] font-semibold border border-[#1e2026]"
                   : "text-[#8c909c] hover:text-white"
@@ -53,11 +53,11 @@ export function TaskHistoryView({ tasks, onSelectTask, onRefresh }: TaskHistoryV
 
       {/* Tasks Table */}
       {filteredTasks.length === 0 ? (
-        <div className="p-12 text-center border border-[#1e2026] bg-[#111216] rounded-2xl text-xs text-[#8c909c]">
+        <div className="flex-1 min-h-0 flex items-center justify-center border border-[#1e2026] bg-[#111216] rounded-xl text-xs text-[#8c909c]">
           No tasks found matching the selected filter criteria.
         </div>
       ) : (
-        <div className="border border-[#1e2026] bg-[#111216] rounded-2xl overflow-x-auto">
+        <div className="flex-1 min-h-0 border border-[#1e2026] bg-[#111216] rounded-xl overflow-y-auto overflow-x-auto text-xs">
           <table className="w-full text-left text-xs">
             <thead className="bg-[#0b0c0f] border-b border-[#1e2026] text-[#8c909c] text-[10px] font-mono uppercase tracking-wider font-semibold">
               <tr>

@@ -90,64 +90,64 @@ export function CompanyMemoryView() {
   const totalPatterns = memories.filter((m) => m.type === "FAILURE_PATTERN").length;
 
   return (
-    <div className="space-y-6">
-      {/* Top Overview Metric Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
-        <div className="bg-[#111216] border border-[#1e2026] p-5 rounded-2xl">
-          <div className="flex items-center justify-between text-[#8c909c] mb-1">
-            <span className="text-[10px] font-mono uppercase tracking-wider font-semibold">Total Stored</span>
-            <Brain size={16} className="text-[#00d4ff]" />
+    <div className="flex-1 min-h-0 flex flex-col gap-3 overflow-hidden">
+      {/* Top Overview Metric Cards (shrink-0) */}
+      <div className="grid grid-cols-1 sm:grid-cols-4 gap-3 shrink-0">
+        <div className="bg-[#111216] border border-[#1e2026] p-3.5 rounded-xl">
+          <div className="flex items-center justify-between text-[#8c909c] mb-0.5">
+            <span className="text-[9px] font-mono uppercase tracking-wider font-semibold">Total Stored</span>
+            <Brain size={14} className="text-[#00d4ff]" />
           </div>
-          <div className="text-3xl font-bold tracking-tight text-white">{memories.length}</div>
-          <div className="text-[11px] text-[#555863] mt-1 font-mono">Persistent SQLite / Postgres store</div>
+          <div className="text-xl font-bold tracking-tight text-white">{memories.length}</div>
+          <div className="text-[10px] text-[#555863] mt-0.5 font-mono">Persistent SQLite store</div>
         </div>
 
-        <div className="bg-[#111216] border border-[#1e2026] p-5 rounded-2xl">
-          <div className="flex items-center justify-between text-[#8c909c] mb-1">
-            <span className="text-[10px] font-mono uppercase tracking-wider font-semibold">Active Policies</span>
-            <ShieldCheck size={16} className="text-[#00d4ff]" />
+        <div className="bg-[#111216] border border-[#1e2026] p-3.5 rounded-xl">
+          <div className="flex items-center justify-between text-[#8c909c] mb-0.5">
+            <span className="text-[9px] font-mono uppercase tracking-wider font-semibold">Active Policies</span>
+            <ShieldCheck size={14} className="text-[#00d4ff]" />
           </div>
-          <div className="text-3xl font-bold tracking-tight text-white">{totalPolicies}</div>
-          <div className="text-[11px] text-[#555863] mt-1 font-mono">Enforced across all workflows</div>
+          <div className="text-xl font-bold tracking-tight text-white">{totalPolicies}</div>
+          <div className="text-[10px] text-[#555863] mt-0.5 font-mono">Enforced across workflows</div>
         </div>
 
-        <div className="bg-[#111216] border border-[#1e2026] p-5 rounded-2xl">
-          <div className="flex items-center justify-between text-[#8c909c] mb-1">
-            <span className="text-[10px] font-mono uppercase tracking-wider font-semibold">Verified Outcomes</span>
-            <CheckCircle2 size={16} className="text-[#10b981]" />
+        <div className="bg-[#111216] border border-[#1e2026] p-3.5 rounded-xl">
+          <div className="flex items-center justify-between text-[#8c909c] mb-0.5">
+            <span className="text-[9px] font-mono uppercase tracking-wider font-semibold">Verified Outcomes</span>
+            <CheckCircle2 size={14} className="text-[#10b981]" />
           </div>
-          <div className="text-3xl font-bold tracking-tight text-white">{totalOutcomes}</div>
-          <div className="text-[11px] text-[#555863] mt-1 font-mono">Audited post-execution knowledge</div>
+          <div className="text-xl font-bold tracking-tight text-white">{totalOutcomes}</div>
+          <div className="text-[10px] text-[#555863] mt-0.5 font-mono">Audited outcome cache</div>
         </div>
 
-        <div className="bg-[#111216] border border-[#1e2026] p-5 rounded-2xl">
-          <div className="flex items-center justify-between text-[#8c909c] mb-1">
-            <span className="text-[10px] font-mono uppercase tracking-wider font-semibold">Recovery Patterns</span>
-            <AlertTriangle size={16} className="text-[#f59e0b]" />
+        <div className="bg-[#111216] border border-[#1e2026] p-3.5 rounded-xl">
+          <div className="flex items-center justify-between text-[#8c909c] mb-0.5">
+            <span className="text-[9px] font-mono uppercase tracking-wider font-semibold">Recovery Patterns</span>
+            <AlertTriangle size={14} className="text-[#f59e0b]" />
           </div>
-          <div className="text-3xl font-bold tracking-tight text-white">{totalPatterns}</div>
-          <div className="text-[11px] text-[#555863] mt-1 font-mono">Adaptive self-healing patterns</div>
+          <div className="text-xl font-bold tracking-tight text-white">{totalPatterns}</div>
+          <div className="text-[10px] text-[#555863] mt-0.5 font-mono">Self-healing patterns</div>
         </div>
       </div>
 
-      {/* Filter and Search Bar */}
-      <div className="bg-[#111216] border border-[#1e2026] p-5 rounded-2xl space-y-4">
+      {/* Filter and Search Bar (shrink-0) */}
+      <div className="bg-[#111216] border border-[#1e2026] p-3.5 rounded-xl space-y-2.5 shrink-0">
         <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
           <div className="relative w-full sm:w-96">
-            <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#555863]" />
+            <Search size={13} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#555863]" />
             <input
               type="text"
               placeholder="Search knowledge by keyword, entity, or source..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-9 pr-3 py-2 rounded-xl bg-[#0b0c0f] border border-[#1e2026] text-xs text-white placeholder-[#555863] focus:outline-none focus:border-[#00d4ff]"
+              className="w-full pl-8 pr-3 py-1.5 rounded-lg bg-[#0b0c0f] border border-[#1e2026] text-xs text-white placeholder-[#555863] focus:outline-none focus:border-[#00d4ff]"
             />
           </div>
 
           <div className="flex items-center gap-2 self-end sm:self-auto">
             <button
               onClick={loadMemories}
-              className="flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold border border-[#1e2026] rounded-xl bg-[#0b0c0f] hover:bg-[#16181d] text-[#8c909c] hover:text-white transition-colors"
+              className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold border border-[#1e2026] rounded-lg bg-[#0b0c0f] hover:bg-[#16181d] text-[#8c909c] hover:text-white transition-colors"
             >
               <RefreshCw size={12} className={loading ? "animate-spin" : ""} />
               <span>Refresh</span>
@@ -156,17 +156,17 @@ export function CompanyMemoryView() {
         </div>
 
         {/* Category Filter Pills */}
-        <div className="flex items-center gap-2 flex-wrap pt-2 border-t border-[#1e2026]">
-          <span className="text-[11px] font-mono uppercase text-[#555863] mr-1 flex items-center gap-1">
+        <div className="flex items-center gap-1.5 flex-wrap pt-1 border-t border-[#1e2026]">
+          <span className="text-[10px] font-mono uppercase text-[#555863] mr-1 flex items-center gap-1">
             <Filter size={11} /> Filter:
           </span>
           {MEMORY_TYPES.map((t) => (
             <button
               key={t.id}
               onClick={() => setSelectedType(t.id)}
-              className={`px-3 py-1 rounded-full text-xs font-medium transition-all ${
+              className={`px-2.5 py-0.5 rounded-full text-[11px] font-medium transition-all ${
                 selectedType === t.id
-                  ? "bg-[#0d1e2e] text-[#00d4ff] border border-[#00d4ff]/40 shadow-[0_0_10px_rgba(0,212,255,0.2)]"
+                  ? "bg-[#0d1e2e] text-[#00d4ff] border border-[#00d4ff]/40 shadow-[0_0_8px_rgba(0,212,255,0.2)]"
                   : "bg-[#0b0c0f] text-[#8c909c] hover:text-white border border-[#1e2026]"
               }`}
             >
@@ -176,11 +176,13 @@ export function CompanyMemoryView() {
         </div>
       </div>
 
-      {/* Memory Cards Grid */}
+      {/* Memory Cards Grid (Scrollable div!) */}
       {loading ? (
-        <div className="p-12 text-center text-xs text-[#8c909c]">Loading persistent corporate memory...</div>
+        <div className="flex-1 min-h-0 flex items-center justify-center text-xs text-[#8c909c]">
+          Loading persistent corporate memory...
+        </div>
       ) : filteredMemories.length === 0 ? (
-        <div className="bg-[#111216] border border-[#1e2026] rounded-2xl p-12 text-center text-xs text-[#8c909c]">
+        <div className="flex-1 min-h-0 flex flex-col items-center justify-center bg-[#111216] border border-[#1e2026] rounded-xl p-8 text-center text-xs text-[#8c909c]">
           <Brain size={32} className="mx-auto text-[#555863] mb-2" />
           <p className="font-semibold text-white">No memory records found</p>
           <p className="mt-1 text-[#8c909c]">
@@ -188,7 +190,8 @@ export function CompanyMemoryView() {
           </p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="flex-1 min-h-0 overflow-y-auto pr-1">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
           {filteredMemories.map((mem) => (
             <div
               key={mem.id}
@@ -226,6 +229,7 @@ export function CompanyMemoryView() {
               </div>
             </div>
           ))}
+          </div>
         </div>
       )}
 

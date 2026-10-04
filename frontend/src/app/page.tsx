@@ -157,7 +157,7 @@ export default function Home() {
   };
 
   return (
-    <div className="flex min-h-screen bg-[#090a0d] text-slate-100">
+    <div className="h-screen w-screen overflow-hidden flex bg-[#090a0d] text-slate-100 select-none">
       {/* Left Sidebar Icon Rail */}
       <Sidebar
         currentSection={currentSection}
@@ -167,7 +167,7 @@ export default function Home() {
       />
 
       {/* Main Content Area */}
-      <div className="flex-1 flex flex-col min-w-0">
+      <div className="flex-1 h-full min-h-0 flex flex-col overflow-hidden">
         {/* Top Header (shown on non-active-task sections) */}
         {currentSection !== "active-task" && (
           <Header
@@ -178,11 +178,13 @@ export default function Home() {
           />
         )}
 
-        {/* Dynamic View Body */}
-        <main className="flex-1 p-6 overflow-y-auto max-w-7xl w-full mx-auto">
+        {/* Dynamic View Body (Fixed viewport, zero window scrolling) */}
+        <main className="flex-1 min-h-0 px-6 py-3 overflow-hidden flex flex-col w-full">
           {/* 1. New Task Console */}
           {currentSection === "new-task" && (
-            <NewTaskConsole onRunGoal={handleRunGoal} isRunning={isRunning} />
+            <div className="flex-1 min-h-0 overflow-y-auto pr-2">
+              <NewTaskConsole onRunGoal={handleRunGoal} isRunning={isRunning} />
+            </div>
           )}
 
           {/* 2. Active Execution View */}
@@ -225,7 +227,9 @@ export default function Home() {
 
           {/* 5. Policies View */}
           {currentSection === "policies" && (
-            <PolicyViewer policies={sandbox.policies ?? []} />
+            <div className="flex-1 min-h-0 overflow-y-auto pr-2">
+              <PolicyViewer policies={sandbox.policies ?? []} />
+            </div>
           )}
 
           {/* 6. Audit Log View */}
@@ -235,61 +239,69 @@ export default function Home() {
 
           {/* 7. Evaluations Dashboard */}
           {currentSection === "evaluations" && (
-            <EvaluationDashboard
-              evaluation={evaluation}
-              onEvaluationCompleted={(report) => {
-                setEvaluation(report);
-                refreshAll();
-              }}
-            />
+            <div className="flex-1 min-h-0 overflow-y-auto pr-2">
+              <EvaluationDashboard
+                evaluation={evaluation}
+                onEvaluationCompleted={(report) => {
+                  setEvaluation(report);
+                  refreshAll();
+                }}
+              />
+            </div>
           )}
 
           {/* 8. Tools Catalog */}
-          {currentSection === "tools" && <ToolCatalogView tools={tools} />}
+          {currentSection === "tools" && (
+            <div className="flex-1 min-h-0 overflow-y-auto pr-2">
+              <ToolCatalogView tools={tools} />
+            </div>
+          )}
 
           {/* 9. System Health & Settings */}
           {currentSection === "settings" && (
-            <div className="space-y-4 max-w-3xl">
-              <div className="border border-[#1e2026] bg-[#111216] p-5 rounded-2xl text-xs space-y-4">
-                <div className="flex items-center gap-2 text-white font-bold text-sm">
-                  <Cpu size={16} className="text-[#00d4ff]" />
-                  <span>CentrAlign Worker Runtime Environment</span>
-                </div>
-
-                <div className="grid grid-cols-2 gap-3 text-xs">
-                  <div className="p-3 bg-[#0d0e12] border border-[#1e2026] rounded-xl">
-                    <span className="text-[10px] uppercase font-semibold text-[#8c909c]">Backend API</span>
-                    <div className="font-mono font-bold text-[#10b981] mt-0.5">Online (FastAPI 0.1.0)</div>
-                    <div className="text-[10px] text-[#555863] font-mono mt-0.5">http://127.0.0.1:8000</div>
+            <div className="flex-1 min-h-0 overflow-y-auto pr-2">
+              <div className="space-y-4 max-w-3xl">
+                <div className="border border-[#1e2026] bg-[#111216] p-5 rounded-2xl text-xs space-y-4">
+                  <div className="flex items-center gap-2 text-white font-bold text-sm">
+                    <Cpu size={16} className="text-[#00d4ff]" />
+                    <span>CentrAlign Worker Runtime Environment</span>
                   </div>
 
-                  <div className="p-3 bg-[#0d0e12] border border-[#1e2026] rounded-xl">
-                    <span className="text-[10px] uppercase font-semibold text-[#8c909c]">Sandbox Environment</span>
-                    <div className="font-mono font-bold text-white mt-0.5">Acme Enterprise Sandbox</div>
-                    <div className="text-[10px] text-[#555863] font-mono mt-0.5">Deterministic Local Store</div>
-                  </div>
+                  <div className="grid grid-cols-2 gap-3 text-xs">
+                    <div className="p-3 bg-[#0d0e12] border border-[#1e2026] rounded-xl">
+                      <span className="text-[10px] uppercase font-semibold text-[#8c909c]">Backend API</span>
+                      <div className="font-mono font-bold text-[#10b981] mt-0.5">Online (FastAPI 0.1.0)</div>
+                      <div className="text-[10px] text-[#555863] font-mono mt-0.5">http://127.0.0.1:8000</div>
+                    </div>
 
-                  <div className="p-3 bg-[#0d0e12] border border-[#1e2026] rounded-xl">
-                    <span className="text-[10px] uppercase font-semibold text-[#8c909c]">Total Registered Tools</span>
-                    <div className="font-mono font-bold text-white mt-0.5">{tools.length} Tools Active</div>
-                  </div>
+                    <div className="p-3 bg-[#0d0e12] border border-[#1e2026] rounded-xl">
+                      <span className="text-[10px] uppercase font-semibold text-[#8c909c]">Sandbox Environment</span>
+                      <div className="font-mono font-bold text-white mt-0.5">Acme Enterprise Sandbox</div>
+                      <div className="text-[10px] text-[#555863] font-mono mt-0.5">Deterministic Local Store</div>
+                    </div>
 
-                  <div className="p-3 bg-[#0d0e12] border border-[#1e2026] rounded-xl">
-                    <span className="text-[10px] uppercase font-semibold text-[#8c909c]">Database Collections</span>
-                    <div className="font-mono font-bold text-white mt-0.5">
-                      {Object.keys(sandbox).length} Subsystems Loaded
+                    <div className="p-3 bg-[#0d0e12] border border-[#1e2026] rounded-xl">
+                      <span className="text-[10px] uppercase font-semibold text-[#8c909c]">Total Registered Tools</span>
+                      <div className="font-mono font-bold text-white mt-0.5">{tools.length} Tools Active</div>
+                    </div>
+
+                    <div className="p-3 bg-[#0d0e12] border border-[#1e2026] rounded-xl">
+                      <span className="text-[10px] uppercase font-semibold text-[#8c909c]">Database Collections</span>
+                      <div className="font-mono font-bold text-white mt-0.5">
+                        {Object.keys(sandbox).length} Subsystems Loaded
+                      </div>
                     </div>
                   </div>
-                </div>
 
-                <div className="pt-3 border-t border-[#1e2026] flex items-center justify-between">
-                  <span className="text-[#8c909c]">Need to restore seed data?</span>
-                  <button
-                    onClick={handleResetSandbox}
-                    className="px-3.5 py-1.5 rounded-lg bg-[#16181d] border border-[#1e2026] hover:bg-[#1f2229] text-white font-semibold transition-colors"
-                  >
-                    Reset Entire Sandbox
-                  </button>
+                  <div className="pt-3 border-t border-[#1e2026] flex items-center justify-between">
+                    <span className="text-[#8c909c]">Need to restore seed data?</span>
+                    <button
+                      onClick={handleResetSandbox}
+                      className="px-3.5 py-1.5 rounded-lg bg-[#16181d] border border-[#1e2026] hover:bg-[#1f2229] text-white font-semibold transition-colors"
+                    >
+                      Reset Entire Sandbox
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
