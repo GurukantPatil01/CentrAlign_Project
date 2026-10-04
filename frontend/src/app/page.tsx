@@ -157,8 +157,8 @@ export default function Home() {
   };
 
   return (
-    <div className="flex min-h-screen bg-slate-50 text-slate-900">
-      {/* Left Sidebar */}
+    <div className="flex min-h-screen bg-[#090a0d] text-slate-100">
+      {/* Left Sidebar Icon Rail */}
       <Sidebar
         currentSection={currentSection}
         onSelectSection={(sec) => setCurrentSection(sec)}
@@ -168,13 +168,15 @@ export default function Home() {
 
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col min-w-0">
-        {/* Top Header */}
-        <Header
-          onRunFlagshipDemo={handleRunFlagshipDemo}
-          onResetSandbox={handleResetSandbox}
-          isBusy={isRunning || isApprovalProcessing}
-          activeSectionTitle={sectionTitles[currentSection]}
-        />
+        {/* Top Header (shown on non-active-task sections) */}
+        {currentSection !== "active-task" && (
+          <Header
+            onRunFlagshipDemo={handleRunFlagshipDemo}
+            onResetSandbox={handleResetSandbox}
+            isBusy={isRunning || isApprovalProcessing}
+            activeSectionTitle={sectionTitles[currentSection]}
+          />
+        )}
 
         {/* Dynamic View Body */}
         <main className="flex-1 p-6 overflow-y-auto max-w-7xl w-full mx-auto">
@@ -248,43 +250,43 @@ export default function Home() {
           {/* 9. System Health & Settings */}
           {currentSection === "settings" && (
             <div className="space-y-4 max-w-3xl">
-              <div className="border border-slate-200 bg-white p-5 rounded shadow-2xs text-xs space-y-4">
-                <div className="flex items-center gap-2 text-slate-900 font-bold text-sm">
-                  <Cpu size={16} className="text-blue-600" />
+              <div className="border border-[#1e2026] bg-[#111216] p-5 rounded-2xl text-xs space-y-4">
+                <div className="flex items-center gap-2 text-white font-bold text-sm">
+                  <Cpu size={16} className="text-[#00d4ff]" />
                   <span>CentrAlign Worker Runtime Environment</span>
                 </div>
 
                 <div className="grid grid-cols-2 gap-3 text-xs">
-                  <div className="p-3 bg-slate-50 border rounded">
-                    <span className="text-[10px] uppercase font-semibold text-slate-400">Backend API</span>
-                    <div className="font-mono font-bold text-emerald-700 mt-0.5">Online (FastAPI 0.1.0)</div>
-                    <div className="text-[10px] text-slate-500 font-mono mt-0.5">http://127.0.0.1:8000</div>
+                  <div className="p-3 bg-[#0d0e12] border border-[#1e2026] rounded-xl">
+                    <span className="text-[10px] uppercase font-semibold text-[#8c909c]">Backend API</span>
+                    <div className="font-mono font-bold text-[#10b981] mt-0.5">Online (FastAPI 0.1.0)</div>
+                    <div className="text-[10px] text-[#555863] font-mono mt-0.5">http://127.0.0.1:8000</div>
                   </div>
 
-                  <div className="p-3 bg-slate-50 border rounded">
-                    <span className="text-[10px] uppercase font-semibold text-slate-400">Sandbox Environment</span>
-                    <div className="font-mono font-bold text-slate-900 mt-0.5">Acme Enterprise Sandbox</div>
-                    <div className="text-[10px] text-slate-500 font-mono mt-0.5">Deterministic Local Store</div>
+                  <div className="p-3 bg-[#0d0e12] border border-[#1e2026] rounded-xl">
+                    <span className="text-[10px] uppercase font-semibold text-[#8c909c]">Sandbox Environment</span>
+                    <div className="font-mono font-bold text-white mt-0.5">Acme Enterprise Sandbox</div>
+                    <div className="text-[10px] text-[#555863] font-mono mt-0.5">Deterministic Local Store</div>
                   </div>
 
-                  <div className="p-3 bg-slate-50 border rounded">
-                    <span className="text-[10px] uppercase font-semibold text-slate-400">Total Registered Tools</span>
-                    <div className="font-mono font-bold text-slate-900 mt-0.5">{tools.length} Tools Active</div>
+                  <div className="p-3 bg-[#0d0e12] border border-[#1e2026] rounded-xl">
+                    <span className="text-[10px] uppercase font-semibold text-[#8c909c]">Total Registered Tools</span>
+                    <div className="font-mono font-bold text-white mt-0.5">{tools.length} Tools Active</div>
                   </div>
 
-                  <div className="p-3 bg-slate-50 border rounded">
-                    <span className="text-[10px] uppercase font-semibold text-slate-400">Database Collections</span>
-                    <div className="font-mono font-bold text-slate-900 mt-0.5">
+                  <div className="p-3 bg-[#0d0e12] border border-[#1e2026] rounded-xl">
+                    <span className="text-[10px] uppercase font-semibold text-[#8c909c]">Database Collections</span>
+                    <div className="font-mono font-bold text-white mt-0.5">
                       {Object.keys(sandbox).length} Subsystems Loaded
                     </div>
                   </div>
                 </div>
 
-                <div className="pt-3 border-t border-slate-100 flex items-center justify-between">
-                  <span className="text-slate-500">Need to restore seed data?</span>
+                <div className="pt-3 border-t border-[#1e2026] flex items-center justify-between">
+                  <span className="text-[#8c909c]">Need to restore seed data?</span>
                   <button
                     onClick={handleResetSandbox}
-                    className="px-3 py-1.5 rounded bg-slate-100 hover:bg-slate-200 text-slate-800 font-semibold"
+                    className="px-3.5 py-1.5 rounded-lg bg-[#16181d] border border-[#1e2026] hover:bg-[#1f2229] text-white font-semibold transition-colors"
                   >
                     Reset Entire Sandbox
                   </button>
@@ -293,6 +295,46 @@ export default function Home() {
             </div>
           )}
         </main>
+
+        {/* Bottom Persistent System Status Bar */}
+        <footer className="h-10 border-t border-[#1e2026] bg-[#090a0d] px-6 flex items-center justify-between text-[11px] font-mono shrink-0 select-none">
+          {/* Left: System Status Indicators */}
+          <div className="flex items-center gap-4 text-[#8c909c]">
+            <span className="text-[9px] uppercase tracking-wider text-[#555863] font-semibold">SYSTEM</span>
+            <div className="flex items-center gap-1.5">
+              <span>API</span>
+              <span className="h-1.5 w-1.5 rounded-full bg-[#10b981] shadow-[0_0_6px_rgba(16,185,129,0.8)]"></span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <span>PLAYWRIGHT</span>
+              <span className="h-1.5 w-1.5 rounded-full bg-[#10b981] shadow-[0_0_6px_rgba(16,185,129,0.8)]"></span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <span>MEMORY</span>
+              <span className="h-1.5 w-1.5 rounded-full bg-[#10b981] shadow-[0_0_6px_rgba(16,185,129,0.8)]"></span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <span>SANDBOX</span>
+              <span className="h-1.5 w-1.5 rounded-full bg-[#10b981] shadow-[0_0_6px_rgba(16,185,129,0.8)]"></span>
+            </div>
+          </div>
+
+          {/* Center: Audit Trail Guarantee */}
+          <div className="hidden md:flex items-center gap-2 text-[#555863]">
+            <span>Evidence vault</span>
+            <span>•</span>
+            <span>12 artifacts</span>
+            <span>•</span>
+            <span>Immutable audit trail</span>
+          </div>
+
+          {/* Right: Shortcut Hint */}
+          <div className="flex items-center gap-1.5 text-[#555863]">
+            <kbd className="px-1.5 py-0.5 rounded bg-[#16181d] border border-[#1e2026] text-[10px] text-[#8c909c]">
+              ⌘ K
+            </kbd>
+          </div>
+        </footer>
       </div>
     </div>
   );

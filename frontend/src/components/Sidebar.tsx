@@ -1,9 +1,10 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import {
   Activity,
   AlertTriangle,
+  BarChart2,
   BookOpen,
   Brain,
   CheckCircle,
@@ -14,11 +15,16 @@ import {
   FileSpreadsheet,
   FileText,
   Headphones,
+  Home,
   Layers,
   PlayCircle,
+  Plus,
+  Radio,
   Receipt,
+  RotateCcw,
   Settings,
-  ShieldAlert,
+  ShieldCheck,
+  Table,
   Users,
   Wrench,
 } from "lucide-react";
@@ -48,184 +54,213 @@ interface SidebarProps {
 }
 
 export function Sidebar({ currentSection, onSelectSection, hasActiveTask, waitingApproval }: SidebarProps) {
-  const workerItems = [
-    { id: "new-task" as NavSection, label: "New Task", icon: PlayCircle },
-    {
-      id: "active-task" as NavSection,
-      label: "Live Execution",
-      icon: Activity,
-      badge: waitingApproval ? "Approval" : hasActiveTask ? "Running" : undefined,
-      badgeColor: waitingApproval ? "bg-amber-500 text-white" : "bg-blue-600 text-white",
-    },
-    { id: "task-history" as NavSection, label: "Task History", icon: Clock },
-    { id: "company-memory" as NavSection, label: "Company Memory", icon: Brain },
-  ];
+  const [showEnterpriseFlyout, setShowEnterpriseFlyout] = useState(false);
 
-  const enterpriseItems = [
-    { id: "invoices" as NavSection, label: "Invoices", icon: Receipt },
-    { id: "payments" as NavSection, label: "Payments", icon: CheckCircle },
-    { id: "vendors" as NavSection, label: "Vendors", icon: Layers },
-    { id: "customers" as NavSection, label: "Customers", icon: Users },
-    { id: "employees" as NavSection, label: "Employees", icon: Users },
-    { id: "tickets" as NavSection, label: "Tickets", icon: Headphones },
-    { id: "policies" as NavSection, label: "Policies", icon: BookOpen },
-  ];
+  const isEnterpriseActive = [
+    "invoices",
+    "payments",
+    "vendors",
+    "customers",
+    "employees",
+    "tickets",
+    "policies",
+    "audit",
+  ].includes(currentSection);
 
-  const observabilityItems = [
-    { id: "audit" as NavSection, label: "Audit Log", icon: FileText },
-    { id: "evaluations" as NavSection, label: "Evaluations", icon: FileCheck },
-  ];
-
-  const systemItems = [
-    { id: "tools" as NavSection, label: "Tool Catalog", icon: Wrench },
-    { id: "settings" as NavSection, label: "System Health", icon: Cpu },
+  const enterpriseItems: { id: NavSection; label: string; icon: React.ElementType }[] = [
+    { id: "invoices", label: "Invoices", icon: Receipt },
+    { id: "payments", label: "Payments", icon: CheckCircle },
+    { id: "vendors", label: "Vendors", icon: Layers },
+    { id: "customers", label: "Customers", icon: Users },
+    { id: "employees", label: "Employees", icon: Users },
+    { id: "tickets", label: "Tickets", icon: Headphones },
+    { id: "policies", label: "Policies", icon: BookOpen },
+    { id: "audit", label: "Audit Log", icon: FileText },
+    { id: "tools", label: "Tool Matrix", icon: Wrench },
   ];
 
   return (
-    <aside className="w-64 border-r border-slate-800 bg-slate-950 text-slate-300 flex flex-col shrink-0 min-h-screen">
-      {/* Brand Header */}
-      <div className="p-4 border-b border-slate-800">
-        <div className="flex items-center gap-2.5">
-          <div className="h-8 w-8 rounded bg-blue-600 flex items-center justify-center text-white font-bold tracking-wider text-sm shadow-sm">
-            CA
-          </div>
-          <div>
-            <div className="text-sm font-semibold tracking-tight text-white flex items-center gap-1.5">
-              CENTRALIGN
-              <span className="text-[10px] uppercase font-mono px-1.5 py-0.5 rounded bg-blue-950 text-blue-400 border border-blue-800">
-                Worker
-              </span>
-            </div>
-            <div className="text-[11px] text-slate-400 font-mono">Autonomous Console v0.1</div>
-          </div>
+    <aside className="w-16 border-r border-[#1e2026] bg-[#090a0d] text-slate-300 flex flex-col items-center py-4 justify-between shrink-0 min-h-screen z-30 select-none">
+      {/* Top: C WORKER Logo */}
+      <div className="flex flex-col items-center gap-0.5 cursor-pointer" onClick={() => onSelectSection("active-task")}>
+        <div className="text-xl font-bold tracking-tight text-white flex items-center justify-center h-8 w-8 rounded-lg bg-gradient-to-b from-white/10 to-white/5 border border-white/10 hover:border-cyan-400/50 transition-colors">
+          C
         </div>
+        <span className="text-[8px] font-mono tracking-widest text-[#8c909c] uppercase font-semibold">
+          WORKER
+        </span>
       </div>
 
-      {/* Nav Groups */}
-      <nav className="flex-1 overflow-y-auto px-3 py-4 space-y-6 text-xs">
-        {/* Worker */}
-        <div>
-          <div className="px-2 mb-2 text-[10px] uppercase tracking-wider font-semibold text-slate-400">
-            Worker Operations
+      {/* Middle: Icon Rail */}
+      <div className="flex flex-col items-center gap-3 my-auto relative">
+        {/* 1. Home / New Task Console */}
+        <button
+          onClick={() => onSelectSection("new-task")}
+          title="New Task Console"
+          className={`h-10 w-10 rounded-xl flex items-center justify-center transition-all ${
+            currentSection === "new-task"
+              ? "bg-[#111f2e] text-[#00d4ff] border border-[#00d4ff]/40 shadow-[0_0_12px_rgba(0,212,255,0.25)]"
+              : "text-[#8c909c] hover:text-white hover:bg-[#16181d]"
+          }`}
+        >
+          <Home size={18} />
+        </button>
+
+        {/* 2. Plus (Quick Launch) */}
+        <button
+          onClick={() => onSelectSection("new-task")}
+          title="Create New Objective"
+          className="h-10 w-10 rounded-xl flex items-center justify-center text-[#8c909c] hover:text-white hover:bg-[#16181d] transition-all"
+        >
+          <Plus size={19} />
+        </button>
+
+        {/* 3. Live Execution (Cyan glowing target pill) */}
+        <button
+          onClick={() => onSelectSection("active-task")}
+          title="Live Execution Trace"
+          className={`relative h-10 w-10 rounded-xl flex items-center justify-center transition-all ${
+            currentSection === "active-task"
+              ? "bg-[#102235] text-[#00d4ff] border border-[#00d4ff]/50 shadow-[0_0_16px_rgba(0,212,255,0.3)]"
+              : "text-[#8c909c] hover:text-white hover:bg-[#16181d]"
+          }`}
+        >
+          <span className="relative flex h-3 w-3 items-center justify-center">
+            {hasActiveTask && (
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
+            )}
+            <span
+              className={`relative inline-flex rounded-full h-2.5 w-2.5 ${
+                waitingApproval
+                  ? "bg-amber-400"
+                  : currentSection === "active-task"
+                  ? "bg-[#00d4ff]"
+                  : "bg-slate-400"
+              }`}
+            ></span>
+          </span>
+          {waitingApproval && (
+            <span className="absolute -top-1 -right-1 h-2 w-2 rounded-full bg-amber-500 animate-pulse"></span>
+          )}
+        </button>
+
+        {/* 4. History / Clock */}
+        <button
+          onClick={() => onSelectSection("task-history")}
+          title="Task Execution History"
+          className={`h-10 w-10 rounded-xl flex items-center justify-center transition-all ${
+            currentSection === "task-history"
+              ? "bg-[#111f2e] text-[#00d4ff] border border-[#00d4ff]/40 shadow-[0_0_12px_rgba(0,212,255,0.25)]"
+              : "text-[#8c909c] hover:text-white hover:bg-[#16181d]"
+          }`}
+        >
+          <RotateCcw size={17} />
+        </button>
+
+        {/* 5. Company Memory (Bullseye / Brain) */}
+        <button
+          onClick={() => onSelectSection("company-memory")}
+          title="Persistent Company Memory"
+          className={`h-10 w-10 rounded-xl flex items-center justify-center transition-all ${
+            currentSection === "company-memory"
+              ? "bg-[#111f2e] text-[#00d4ff] border border-[#00d4ff]/40 shadow-[0_0_12px_rgba(0,212,255,0.25)]"
+              : "text-[#8c909c] hover:text-white hover:bg-[#16181d]"
+          }`}
+        >
+          <div className="relative flex items-center justify-center">
+            <span className="h-4 w-4 rounded-full border border-current"></span>
+            <span className="absolute h-1.5 w-1.5 rounded-full bg-current"></span>
           </div>
-          <div className="space-y-0.5">
-            {workerItems.map((item) => {
-              const Icon = item.icon;
-              const active = currentSection === item.id;
-              return (
-                <button
-                  key={item.id}
-                  onClick={() => onSelectSection(item.id)}
-                  className={`w-full flex items-center justify-between px-2.5 py-2 rounded text-left transition-colors font-medium ${
-                    active
-                      ? "bg-slate-800 text-white"
-                      : "text-slate-400 hover:text-slate-200 hover:bg-slate-900"
-                  }`}
-                >
-                  <div className="flex items-center gap-2.5">
-                    <Icon size={15} className={active ? "text-blue-400" : "text-slate-400"} />
+        </button>
+
+        {/* 6. ERP Data Tables / Database */}
+        <div className="relative">
+          <button
+            onClick={() => {
+              if (isEnterpriseActive) {
+                setShowEnterpriseFlyout(!showEnterpriseFlyout);
+              } else {
+                onSelectSection("invoices");
+                setShowEnterpriseFlyout(true);
+              }
+            }}
+            title="Enterprise Sandbox ERP Tables"
+            className={`h-10 w-10 rounded-xl flex items-center justify-center transition-all ${
+              isEnterpriseActive
+                ? "bg-[#111f2e] text-[#00d4ff] border border-[#00d4ff]/40 shadow-[0_0_12px_rgba(0,212,255,0.25)]"
+                : "text-[#8c909c] hover:text-white hover:bg-[#16181d]"
+            }`}
+          >
+            <Table size={18} />
+          </button>
+
+          {/* Enterprise Dropdown Flyout */}
+          {showEnterpriseFlyout && (
+            <div
+              className="absolute left-14 top-0 w-48 bg-[#111216] border border-[#1e2026] rounded-xl shadow-2xl p-2 z-50 text-xs space-y-0.5"
+              onMouseLeave={() => setShowEnterpriseFlyout(false)}
+            >
+              <div className="px-2 py-1 text-[10px] font-mono uppercase tracking-wider text-[#8c909c]">
+                Enterprise ERP
+              </div>
+              {enterpriseItems.map((item) => {
+                const Icon = item.icon;
+                const active = currentSection === item.id;
+                return (
+                  <button
+                    key={item.id}
+                    onClick={() => {
+                      onSelectSection(item.id);
+                      setShowEnterpriseFlyout(false);
+                    }}
+                    className={`w-full flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-left transition-colors ${
+                      active
+                        ? "bg-[#182331] text-[#00d4ff] font-semibold"
+                        : "text-[#8c909c] hover:text-white hover:bg-[#16181d]"
+                    }`}
+                  >
+                    <Icon size={14} className={active ? "text-[#00d4ff]" : "text-[#8c909c]"} />
                     <span>{item.label}</span>
-                  </div>
-                  {item.badge && (
-                    <span className={`text-[10px] px-1.5 py-0.2 rounded font-mono font-medium ${item.badgeColor}`}>
-                      {item.badge}
-                    </span>
-                  )}
-                </button>
-              );
-            })}
-          </div>
+                  </button>
+                );
+              })}
+            </div>
+          )}
         </div>
 
-        {/* Enterprise */}
-        <div>
-          <div className="px-2 mb-2 text-[10px] uppercase tracking-wider font-semibold text-slate-400">
-            Enterprise Sandbox
-          </div>
-          <div className="space-y-0.5">
-            {enterpriseItems.map((item) => {
-              const Icon = item.icon;
-              const active = currentSection === item.id;
-              return (
-                <button
-                  key={item.id}
-                  onClick={() => onSelectSection(item.id)}
-                  className={`w-full flex items-center gap-2.5 px-2.5 py-2 rounded text-left transition-colors font-medium ${
-                    active
-                      ? "bg-slate-800 text-white"
-                      : "text-slate-400 hover:text-slate-200 hover:bg-slate-900"
-                  }`}
-                >
-                  <Icon size={15} className={active ? "text-blue-400" : "text-slate-400"} />
-                  <span>{item.label}</span>
-                </button>
-              );
-            })}
-          </div>
-        </div>
+        {/* 7. Evaluations */}
+        <button
+          onClick={() => onSelectSection("evaluations")}
+          title="Empirical Evaluations"
+          className={`h-10 w-10 rounded-xl flex items-center justify-center transition-all ${
+            currentSection === "evaluations"
+              ? "bg-[#111f2e] text-[#00d4ff] border border-[#00d4ff]/40 shadow-[0_0_12px_rgba(0,212,255,0.25)]"
+              : "text-[#8c909c] hover:text-white hover:bg-[#16181d]"
+          }`}
+        >
+          <BarChart2 size={17} />
+        </button>
 
-        {/* Observability */}
-        <div>
-          <div className="px-2 mb-2 text-[10px] uppercase tracking-wider font-semibold text-slate-400">
-            Observability
-          </div>
-          <div className="space-y-0.5">
-            {observabilityItems.map((item) => {
-              const Icon = item.icon;
-              const active = currentSection === item.id;
-              return (
-                <button
-                  key={item.id}
-                  onClick={() => onSelectSection(item.id)}
-                  className={`w-full flex items-center gap-2.5 px-2.5 py-2 rounded text-left transition-colors font-medium ${
-                    active
-                      ? "bg-slate-800 text-white"
-                      : "text-slate-400 hover:text-slate-200 hover:bg-slate-900"
-                  }`}
-                >
-                  <Icon size={15} className={active ? "text-blue-400" : "text-slate-400"} />
-                  <span>{item.label}</span>
-                </button>
-              );
-            })}
-          </div>
-        </div>
+        {/* 8. Settings / System Health */}
+        <button
+          onClick={() => onSelectSection("settings")}
+          title="System Health & Architecture"
+          className={`h-10 w-10 rounded-xl flex items-center justify-center transition-all ${
+            currentSection === "settings"
+              ? "bg-[#111f2e] text-[#00d4ff] border border-[#00d4ff]/40 shadow-[0_0_12px_rgba(0,212,255,0.25)]"
+              : "text-[#8c909c] hover:text-white hover:bg-[#16181d]"
+          }`}
+        >
+          <Cpu size={17} />
+        </button>
+      </div>
 
-        {/* System */}
-        <div>
-          <div className="px-2 mb-2 text-[10px] uppercase tracking-wider font-semibold text-slate-400">
-            System
-          </div>
-          <div className="space-y-0.5">
-            {systemItems.map((item) => {
-              const Icon = item.icon;
-              const active = currentSection === item.id;
-              return (
-                <button
-                  key={item.id}
-                  onClick={() => onSelectSection(item.id)}
-                  className={`w-full flex items-center gap-2.5 px-2.5 py-2 rounded text-left transition-colors font-medium ${
-                    active
-                      ? "bg-slate-800 text-white"
-                      : "text-slate-400 hover:text-slate-200 hover:bg-slate-900"
-                  }`}
-                >
-                  <Icon size={15} className={active ? "text-blue-400" : "text-slate-400"} />
-                  <span>{item.label}</span>
-                </button>
-              );
-            })}
-          </div>
-        </div>
-      </nav>
-
-      {/* Footer Info */}
-      <div className="p-3 border-t border-slate-800 bg-slate-900/60 text-[11px] text-slate-400 flex items-center justify-between">
-        <div className="flex items-center gap-1.5">
-          <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span>
-          <span>Acme Sandbox</span>
-        </div>
-        <span className="font-mono text-[10px] text-slate-400">127.0.0.1:8000</span>
+      {/* Bottom: ACME / PROD status */}
+      <div className="flex flex-col items-center gap-1.5 cursor-default">
+        <span className="text-[9px] font-mono tracking-wider text-[#8c909c] uppercase font-semibold text-center leading-tight">
+          ACME /<br />PROD
+        </span>
+        <div className="h-1.5 w-6 rounded-full bg-[#10b981]/80 shadow-[0_0_8px_rgba(16,185,129,0.5)]"></div>
       </div>
     </aside>
   );

@@ -21,29 +21,29 @@ export function ToolCatalogView({ tools }: ToolCatalogViewProps) {
   return (
     <div className="space-y-4">
       {/* Header */}
-      <div className="border border-slate-200 bg-white p-4 rounded shadow-2xs flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
+      <div className="border border-[#1e2026] bg-[#111216] p-5 rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
         <div>
-          <div className="flex items-center gap-1.5 text-blue-600 font-semibold tracking-wide uppercase text-[10px]">
+          <div className="flex items-center gap-1.5 text-[#00d4ff] font-semibold tracking-wider uppercase text-[10px] font-mono">
             <Wrench size={13} />
             <span>Agent Capabilities Registry</span>
           </div>
-          <h2 className="text-base font-bold text-slate-900 mt-1">Enterprise Tool Catalog & Risk Matrix</h2>
-          <p className="text-slate-500 mt-0.5">
+          <h2 className="text-xl font-bold text-white mt-1 tracking-tight">Enterprise Tool Catalog & Risk Matrix</h2>
+          <p className="text-[#8c909c] mt-0.5">
             Registered tools accessible to the autonomous runtime, with risk classifications and contracts.
           </p>
         </div>
 
         {/* Category Filters */}
-        <div className="flex items-center gap-1 bg-slate-50 p-1 rounded border border-slate-200">
-          <Filter size={12} className="text-slate-400 ml-1.5" />
+        <div className="flex items-center gap-1.5 bg-[#0b0c0f] p-1.5 rounded-xl border border-[#1e2026]">
+          <Filter size={12} className="text-[#555863] ml-1.5" />
           {categories.map((cat) => (
             <button
               key={cat}
               onClick={() => setFilterCategory(cat)}
-              className={`px-2 py-1 rounded font-medium transition-colors text-[11px] ${
+              className={`px-3 py-1 rounded-lg font-medium transition-all text-xs ${
                 filterCategory === cat
-                  ? "bg-white text-slate-900 font-semibold shadow-2xs"
-                  : "text-slate-500 hover:text-slate-900"
+                  ? "bg-[#16181d] text-[#00d4ff] font-semibold border border-[#1e2026]"
+                  : "text-[#8c909c] hover:text-white"
               }`}
             >
               {cat}
@@ -53,26 +53,26 @@ export function ToolCatalogView({ tools }: ToolCatalogViewProps) {
       </div>
 
       {/* Grid of Tools */}
-      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 text-xs">
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 text-xs">
         {filteredTools.map((tool) => (
           <div
             key={tool.name}
-            className="p-4 bg-white border border-slate-200 rounded shadow-2xs flex flex-col justify-between"
+            className="p-5 bg-[#111216] border border-[#1e2026] rounded-2xl shadow-xs flex flex-col justify-between"
           >
             <div>
               {/* Header tags */}
               <div className="flex items-center justify-between mb-2">
-                <span className="text-[10px] font-semibold uppercase tracking-wider px-1.5 py-0.5 rounded bg-slate-100 text-slate-700">
+                <span className="text-[10px] font-mono font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full bg-[#16181d] text-[#00d4ff] border border-[#1e2026]">
                   {tool.category}
                 </span>
 
                 <span
-                  className={`text-[9px] font-mono font-bold px-1.5 py-0.2 rounded uppercase ${
+                  className={`text-[9px] font-mono font-bold px-2 py-0.5 rounded-full uppercase tracking-wider border ${
                     tool.risk === "HIGH"
-                      ? "bg-rose-100 text-rose-800 border border-rose-200"
+                      ? "bg-[#280d12] text-[#f43f5e] border-[#f43f5e]/30"
                       : tool.risk === "MEDIUM"
-                      ? "bg-amber-100 text-amber-800 border border-amber-200"
-                      : "bg-emerald-100 text-emerald-800 border border-emerald-200"
+                      ? "bg-[#271d0b] text-[#f59e0b] border-[#f59e0b]/30"
+                      : "bg-[#0a2318] text-[#10b981] border-[#10b981]/30"
                   }`}
                 >
                   {tool.risk} RISK
@@ -80,22 +80,22 @@ export function ToolCatalogView({ tools }: ToolCatalogViewProps) {
               </div>
 
               {/* Tool Name */}
-              <div className="font-mono font-bold text-slate-900 text-xs flex items-center gap-1.5">
-                <Terminal size={13} className="text-blue-600" />
+              <div className="font-mono font-bold text-white text-xs flex items-center gap-1.5">
+                <Terminal size={13} className="text-[#00d4ff]" />
                 <span>{tool.name}</span>
               </div>
 
               {/* Description */}
-              <p className="mt-1.5 text-slate-600 leading-relaxed text-[11px]">{tool.description}</p>
+              <p className="mt-2 text-[#8c909c] leading-relaxed text-[11px]">{tool.description}</p>
             </div>
 
             {/* Parameter Schema */}
-            <div className="mt-3 pt-2.5 border-t border-slate-100 text-[10px]">
-              <span className="font-semibold text-slate-400 uppercase">Input Schema</span>
-              <div className="mt-1 font-mono bg-slate-50 p-2 rounded border border-slate-100 text-slate-700 overflow-x-auto">
+            <div className="mt-4 pt-3 border-t border-[#1e2026] text-[10px]">
+              <span className="font-mono uppercase font-semibold text-[#8c909c]">Input Schema</span>
+              <div className="mt-1.5 font-mono bg-[#0b0c0f] p-2.5 rounded-xl border border-[#1e2026] text-slate-300 overflow-x-auto space-y-0.5">
                 {Object.entries(tool.parameters).map(([k, v]) => (
                   <div key={k} className="truncate">
-                    <span className="text-blue-700">{k}</span>: <span className="text-slate-500">{v}</span>
+                    <span className="text-[#00d4ff]">{k}</span>: <span className="text-[#8c909c]">{v}</span>
                   </div>
                 ))}
               </div>

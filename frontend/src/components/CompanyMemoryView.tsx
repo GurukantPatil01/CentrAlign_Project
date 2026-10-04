@@ -24,13 +24,13 @@ import { CompanyMemory, deleteMemory, fetchMemories } from "@/lib/api";
 
 const MEMORY_TYPES = [
   { id: "ALL", label: "All Memories" },
-  { id: "COMPANY_POLICY", label: "Policies", color: "bg-blue-50 text-blue-700 border-blue-200" },
-  { id: "COMPANY_FACT", label: "Facts", color: "bg-indigo-50 text-indigo-700 border-indigo-200" },
-  { id: "ENTITY", label: "Entities", color: "bg-purple-50 text-purple-700 border-purple-200" },
-  { id: "WORKFLOW_KNOWLEDGE", label: "Workflows", color: "bg-cyan-50 text-cyan-700 border-cyan-200" },
-  { id: "TOOL_KNOWLEDGE", label: "Tools", color: "bg-amber-50 text-amber-700 border-amber-200" },
-  { id: "PREVIOUS_OUTCOME", label: "Outcomes", color: "bg-emerald-50 text-emerald-700 border-emerald-200" },
-  { id: "FAILURE_PATTERN", label: "Recovery Patterns", color: "bg-rose-50 text-rose-700 border-rose-200" },
+  { id: "COMPANY_POLICY", label: "Policies", color: "bg-[#0d1e2e] text-[#00d4ff] border-[#00d4ff]/30" },
+  { id: "COMPANY_FACT", label: "Facts", color: "bg-indigo-950/60 text-indigo-400 border-indigo-800/50" },
+  { id: "ENTITY", label: "Entities", color: "bg-purple-950/60 text-purple-400 border-purple-800/50" },
+  { id: "WORKFLOW_KNOWLEDGE", label: "Workflows", color: "bg-teal-950/60 text-teal-300 border-teal-800/50" },
+  { id: "TOOL_KNOWLEDGE", label: "Tools", color: "bg-amber-950/60 text-amber-400 border-amber-800/50" },
+  { id: "PREVIOUS_OUTCOME", label: "Outcomes", color: "bg-[#0a2318] text-[#10b981] border-[#10b981]/30" },
+  { id: "FAILURE_PATTERN", label: "Recovery Patterns", color: "bg-rose-950/60 text-rose-400 border-rose-800/50" },
 ];
 
 export function CompanyMemoryView() {
@@ -82,7 +82,7 @@ export function CompanyMemoryView() {
 
   const typeColor = (type: string) => {
     const found = MEMORY_TYPES.find((t) => t.id === type);
-    return found?.color || "bg-slate-50 text-slate-700 border-slate-200";
+    return found?.color || "bg-[#16181d] text-[#8c909c] border-[#1e2026]";
   };
 
   const totalPolicies = memories.filter((m) => m.type === "COMPANY_POLICY").length;
@@ -93,61 +93,61 @@ export function CompanyMemoryView() {
     <div className="space-y-6">
       {/* Top Overview Metric Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
-        <div className="bg-white border border-slate-200 p-4 rounded-lg shadow-2xs">
-          <div className="flex items-center justify-between text-slate-500 mb-1">
-            <span className="text-xs font-semibold uppercase tracking-wider">Total Stored</span>
-            <Brain size={16} className="text-blue-600" />
+        <div className="bg-[#111216] border border-[#1e2026] p-5 rounded-2xl">
+          <div className="flex items-center justify-between text-[#8c909c] mb-1">
+            <span className="text-[10px] font-mono uppercase tracking-wider font-semibold">Total Stored</span>
+            <Brain size={16} className="text-[#00d4ff]" />
           </div>
-          <div className="text-2xl font-bold text-slate-900">{memories.length}</div>
-          <div className="text-[11px] text-slate-500 mt-1">Persistent SQLite / Postgres store</div>
+          <div className="text-3xl font-bold tracking-tight text-white">{memories.length}</div>
+          <div className="text-[11px] text-[#555863] mt-1 font-mono">Persistent SQLite / Postgres store</div>
         </div>
 
-        <div className="bg-white border border-slate-200 p-4 rounded-lg shadow-2xs">
-          <div className="flex items-center justify-between text-slate-500 mb-1">
-            <span className="text-xs font-semibold uppercase tracking-wider">Active Policies</span>
-            <ShieldCheck size={16} className="text-blue-600" />
+        <div className="bg-[#111216] border border-[#1e2026] p-5 rounded-2xl">
+          <div className="flex items-center justify-between text-[#8c909c] mb-1">
+            <span className="text-[10px] font-mono uppercase tracking-wider font-semibold">Active Policies</span>
+            <ShieldCheck size={16} className="text-[#00d4ff]" />
           </div>
-          <div className="text-2xl font-bold text-slate-900">{totalPolicies}</div>
-          <div className="text-[11px] text-slate-500 mt-1">Enforced across all workflows</div>
+          <div className="text-3xl font-bold tracking-tight text-white">{totalPolicies}</div>
+          <div className="text-[11px] text-[#555863] mt-1 font-mono">Enforced across all workflows</div>
         </div>
 
-        <div className="bg-white border border-slate-200 p-4 rounded-lg shadow-2xs">
-          <div className="flex items-center justify-between text-slate-500 mb-1">
-            <span className="text-xs font-semibold uppercase tracking-wider">Verified Outcomes</span>
-            <CheckCircle2 size={16} className="text-emerald-600" />
+        <div className="bg-[#111216] border border-[#1e2026] p-5 rounded-2xl">
+          <div className="flex items-center justify-between text-[#8c909c] mb-1">
+            <span className="text-[10px] font-mono uppercase tracking-wider font-semibold">Verified Outcomes</span>
+            <CheckCircle2 size={16} className="text-[#10b981]" />
           </div>
-          <div className="text-2xl font-bold text-slate-900">{totalOutcomes}</div>
-          <div className="text-[11px] text-slate-500 mt-1">Audited post-execution knowledge</div>
+          <div className="text-3xl font-bold tracking-tight text-white">{totalOutcomes}</div>
+          <div className="text-[11px] text-[#555863] mt-1 font-mono">Audited post-execution knowledge</div>
         </div>
 
-        <div className="bg-white border border-slate-200 p-4 rounded-lg shadow-2xs">
-          <div className="flex items-center justify-between text-slate-500 mb-1">
-            <span className="text-xs font-semibold uppercase tracking-wider">Recovery Patterns</span>
-            <AlertTriangle size={16} className="text-rose-600" />
+        <div className="bg-[#111216] border border-[#1e2026] p-5 rounded-2xl">
+          <div className="flex items-center justify-between text-[#8c909c] mb-1">
+            <span className="text-[10px] font-mono uppercase tracking-wider font-semibold">Recovery Patterns</span>
+            <AlertTriangle size={16} className="text-[#f59e0b]" />
           </div>
-          <div className="text-2xl font-bold text-slate-900">{totalPatterns}</div>
-          <div className="text-[11px] text-slate-500 mt-1">Adaptive self-healing patterns</div>
+          <div className="text-3xl font-bold tracking-tight text-white">{totalPatterns}</div>
+          <div className="text-[11px] text-[#555863] mt-1 font-mono">Adaptive self-healing patterns</div>
         </div>
       </div>
 
       {/* Filter and Search Bar */}
-      <div className="bg-white border border-slate-200 p-4 rounded-lg shadow-2xs space-y-3">
+      <div className="bg-[#111216] border border-[#1e2026] p-5 rounded-2xl space-y-4">
         <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
           <div className="relative w-full sm:w-96">
-            <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+            <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#555863]" />
             <input
               type="text"
               placeholder="Search knowledge by keyword, entity, or source..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-9 pr-3 py-1.5 border border-slate-300 rounded text-xs focus:outline-hidden focus:ring-1 focus:ring-blue-500"
+              className="w-full pl-9 pr-3 py-2 rounded-xl bg-[#0b0c0f] border border-[#1e2026] text-xs text-white placeholder-[#555863] focus:outline-none focus:border-[#00d4ff]"
             />
           </div>
 
           <div className="flex items-center gap-2 self-end sm:self-auto">
             <button
               onClick={loadMemories}
-              className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium border border-slate-300 rounded bg-white hover:bg-slate-50 text-slate-700"
+              className="flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold border border-[#1e2026] rounded-xl bg-[#0b0c0f] hover:bg-[#16181d] text-[#8c909c] hover:text-white transition-colors"
             >
               <RefreshCw size={12} className={loading ? "animate-spin" : ""} />
               <span>Refresh</span>
@@ -156,18 +156,18 @@ export function CompanyMemoryView() {
         </div>
 
         {/* Category Filter Pills */}
-        <div className="flex items-center gap-1.5 flex-wrap pt-1 border-t border-slate-100">
-          <span className="text-[11px] font-semibold text-slate-400 mr-1 flex items-center gap-1">
+        <div className="flex items-center gap-2 flex-wrap pt-2 border-t border-[#1e2026]">
+          <span className="text-[11px] font-mono uppercase text-[#555863] mr-1 flex items-center gap-1">
             <Filter size={11} /> Filter:
           </span>
           {MEMORY_TYPES.map((t) => (
             <button
               key={t.id}
               onClick={() => setSelectedType(t.id)}
-              className={`px-2.5 py-1 rounded-full text-[11px] font-medium transition-colors ${
+              className={`px-3 py-1 rounded-full text-xs font-medium transition-all ${
                 selectedType === t.id
-                  ? "bg-blue-600 text-white shadow-2xs"
-                  : "bg-slate-100 text-slate-600 hover:bg-slate-200"
+                  ? "bg-[#0d1e2e] text-[#00d4ff] border border-[#00d4ff]/40 shadow-[0_0_10px_rgba(0,212,255,0.2)]"
+                  : "bg-[#0b0c0f] text-[#8c909c] hover:text-white border border-[#1e2026]"
               }`}
             >
               {t.label}
@@ -178,12 +178,12 @@ export function CompanyMemoryView() {
 
       {/* Memory Cards Grid */}
       {loading ? (
-        <div className="p-12 text-center text-xs text-slate-400">Loading persistent corporate memory...</div>
+        <div className="p-12 text-center text-xs text-[#8c909c]">Loading persistent corporate memory...</div>
       ) : filteredMemories.length === 0 ? (
-        <div className="bg-white border border-slate-200 rounded-lg p-12 text-center text-xs text-slate-500">
-          <Brain size={32} className="mx-auto text-slate-300 mb-2" />
-          <p className="font-semibold text-slate-700">No memory records found</p>
-          <p className="mt-1 text-slate-400">
+        <div className="bg-[#111216] border border-[#1e2026] rounded-2xl p-12 text-center text-xs text-[#8c909c]">
+          <Brain size={32} className="mx-auto text-[#555863] mb-2" />
+          <p className="font-semibold text-white">No memory records found</p>
+          <p className="mt-1 text-[#8c909c]">
             {searchQuery ? "Try refining your search query." : "Agent will promote validated discoveries here as workflows complete."}
           </p>
         </div>
@@ -193,30 +193,34 @@ export function CompanyMemoryView() {
             <div
               key={mem.id}
               onClick={() => setSelectedMemory(mem)}
-              className="bg-white border border-slate-200 hover:border-blue-400 rounded-lg p-4 shadow-2xs hover:shadow-xs transition-all cursor-pointer flex flex-col justify-between space-y-3"
+              className="bg-[#111216] border border-[#1e2026] hover:border-[#00d4ff]/40 rounded-2xl p-5 shadow-xs transition-all cursor-pointer flex flex-col justify-between space-y-3 group"
             >
               <div>
                 <div className="flex items-start justify-between gap-2 mb-2">
-                  <span className={`text-[10px] uppercase font-mono px-2 py-0.5 rounded border font-semibold ${typeColor(mem.type)}`}>
+                  <span className={`text-[10px] uppercase font-mono px-2 py-0.5 rounded-full border font-semibold ${typeColor(mem.type)}`}>
                     {mem.type.replace(/_/g, " ")}
                   </span>
-                  <div className="flex items-center gap-1.5 text-[11px] text-slate-400 font-mono">
-                    <ShieldCheck size={13} className="text-emerald-600" />
+                  <div className="flex items-center gap-1.5 text-[11px] text-[#10b981] font-mono">
+                    <ShieldCheck size={13} />
                     <span>{Math.round(mem.confidence * 100)}%</span>
                   </div>
                 </div>
 
-                <h4 className="text-xs font-bold text-slate-900 leading-snug">{mem.title}</h4>
-                <div className="text-[11px] font-mono text-slate-400 mt-0.5">{mem.key}</div>
+                <h4 className="text-sm font-bold text-white group-hover:text-[#00d4ff] transition-colors leading-snug">
+                  {mem.title}
+                </h4>
+                <div className="text-[11px] font-mono text-[#555863] mt-0.5">{mem.key}</div>
 
-                <p className="text-xs text-slate-600 mt-2 line-clamp-3 leading-relaxed">{mem.content}</p>
+                <p className="text-xs text-[#8c909c] mt-2 line-clamp-3 leading-relaxed font-normal">
+                  {mem.content}
+                </p>
               </div>
 
-              <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-400">
-                <span className="truncate max-w-[160px] font-medium text-slate-500" title={mem.source}>
+              <div className="pt-3 border-t border-[#1e2026] flex items-center justify-between text-[11px] text-[#555863] font-mono">
+                <span className="truncate max-w-[160px]" title={mem.source}>
                   {mem.source}
                 </span>
-                <span className="shrink-0">
+                <span className="shrink-0 text-[#8c909c]">
                   {mem.tasks_used.length} task{mem.tasks_used.length === 1 ? "" : "s"} used
                 </span>
               </div>
@@ -227,16 +231,16 @@ export function CompanyMemoryView() {
 
       {/* Memory Provenance Inspector Modal */}
       {selectedMemory && (
-        <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full border border-slate-200 overflow-hidden flex flex-col max-h-[85vh]">
-            <div className="p-4 bg-slate-900 text-white flex items-center justify-between">
+        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-[#111216] rounded-2xl shadow-2xl max-w-2xl w-full border border-[#1e2026] overflow-hidden flex flex-col max-h-[85vh]">
+            <div className="p-4 bg-[#0b0c0f] border-b border-[#1e2026] text-white flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <Brain size={16} className="text-blue-400" />
+                <Brain size={16} className="text-[#00d4ff]" />
                 <span className="font-semibold text-sm">Company Memory Record</span>
               </div>
               <button
                 onClick={() => setSelectedMemory(null)}
-                className="text-slate-400 hover:text-white p-1 rounded"
+                className="text-[#8c909c] hover:text-white p-1 rounded-lg"
               >
                 <X size={16} />
               </button>
@@ -245,57 +249,57 @@ export function CompanyMemoryView() {
             <div className="p-5 overflow-y-auto space-y-4 text-xs">
               <div>
                 <div className="flex items-center gap-2 mb-1.5">
-                  <span className={`text-[10px] uppercase font-mono px-2 py-0.5 rounded border font-semibold ${typeColor(selectedMemory.type)}`}>
+                  <span className={`text-[10px] uppercase font-mono px-2 py-0.5 rounded-full border font-semibold ${typeColor(selectedMemory.type)}`}>
                     {selectedMemory.type.replace(/_/g, " ")}
                   </span>
-                  <span className="text-[10px] font-mono text-slate-400">{selectedMemory.id}</span>
+                  <span className="text-[10px] font-mono text-[#555863]">{selectedMemory.id}</span>
                 </div>
-                <h3 className="text-sm font-bold text-slate-900">{selectedMemory.title}</h3>
-                <div className="text-[11px] font-mono text-slate-500 mt-0.5">Key: {selectedMemory.key}</div>
+                <h3 className="text-base font-bold text-white">{selectedMemory.title}</h3>
+                <div className="text-[11px] font-mono text-[#00d4ff] mt-0.5">Key: {selectedMemory.key}</div>
               </div>
 
-              <div className="p-3 bg-slate-50 border border-slate-200 rounded font-sans leading-relaxed text-slate-800">
+              <div className="p-4 bg-[#0b0c0f] border border-[#1e2026] rounded-xl font-sans leading-relaxed text-slate-200">
                 {selectedMemory.content}
               </div>
 
               <div className="grid grid-cols-2 gap-3">
-                <div className="p-3 border border-slate-200 rounded bg-slate-50">
-                  <span className="text-[10px] uppercase font-semibold text-slate-400 block mb-1">Source & Origin</span>
-                  <div className="font-medium text-slate-800">{selectedMemory.source}</div>
+                <div className="p-3 border border-[#1e2026] rounded-xl bg-[#0b0c0f]">
+                  <span className="text-[10px] uppercase font-semibold text-[#8c909c] block mb-1 font-mono">Source & Origin</span>
+                  <div className="font-medium text-white">{selectedMemory.source}</div>
                 </div>
 
-                <div className="p-3 border border-slate-200 rounded bg-slate-50">
-                  <span className="text-[10px] uppercase font-semibold text-slate-400 block mb-1">Confidence Score</span>
-                  <div className="font-bold text-emerald-700 flex items-center gap-1">
+                <div className="p-3 border border-[#1e2026] rounded-xl bg-[#0b0c0f]">
+                  <span className="text-[10px] uppercase font-semibold text-[#8c909c] block mb-1 font-mono">Confidence Score</span>
+                  <div className="font-bold text-[#10b981] flex items-center gap-1">
                     <ShieldCheck size={14} />
                     <span>{Math.round(selectedMemory.confidence * 100)}% Verified</span>
                   </div>
                 </div>
 
-                <div className="col-span-2 p-3 border border-slate-200 rounded bg-slate-50">
-                  <span className="text-[10px] uppercase font-semibold text-slate-400 block mb-1">Provenance Trail</span>
-                  <div className="font-mono text-[11px] text-slate-700">{selectedMemory.provenance}</div>
+                <div className="col-span-2 p-3 border border-[#1e2026] rounded-xl bg-[#0b0c0f]">
+                  <span className="text-[10px] uppercase font-semibold text-[#8c909c] block mb-1 font-mono">Provenance Trail</span>
+                  <div className="font-mono text-[11px] text-slate-300">{selectedMemory.provenance}</div>
                 </div>
 
-                <div className="p-3 border border-slate-200 rounded bg-slate-50">
-                  <span className="text-[10px] uppercase font-semibold text-slate-400 block mb-1">Created At</span>
-                  <div className="font-mono text-[11px] text-slate-600">{new Date(selectedMemory.created_at).toLocaleString()}</div>
+                <div className="p-3 border border-[#1e2026] rounded-xl bg-[#0b0c0f]">
+                  <span className="text-[10px] uppercase font-semibold text-[#8c909c] block mb-1 font-mono">Created At</span>
+                  <div className="font-mono text-[11px] text-[#8c909c]">{new Date(selectedMemory.created_at).toLocaleString()}</div>
                 </div>
 
-                <div className="p-3 border border-slate-200 rounded bg-slate-50">
-                  <span className="text-[10px] uppercase font-semibold text-slate-400 block mb-1">Last Applied</span>
-                  <div className="font-mono text-[11px] text-slate-600">{new Date(selectedMemory.last_used_at).toLocaleString()}</div>
+                <div className="p-3 border border-[#1e2026] rounded-xl bg-[#0b0c0f]">
+                  <span className="text-[10px] uppercase font-semibold text-[#8c909c] block mb-1 font-mono">Last Applied</span>
+                  <div className="font-mono text-[11px] text-[#8c909c]">{new Date(selectedMemory.last_used_at).toLocaleString()}</div>
                 </div>
               </div>
 
               {selectedMemory.tasks_used.length > 0 && (
                 <div>
-                  <span className="text-[10px] uppercase font-semibold text-slate-400 block mb-1.5">
+                  <span className="text-[10px] uppercase font-semibold text-[#8c909c] block mb-1.5 font-mono">
                     Tasks Guided by this Memory ({selectedMemory.tasks_used.length})
                   </span>
                   <div className="flex flex-wrap gap-1.5 font-mono text-[10px]">
                     {selectedMemory.tasks_used.map((tId) => (
-                      <span key={tId} className="px-2 py-0.5 rounded bg-blue-50 text-blue-700 border border-blue-200">
+                      <span key={tId} className="px-2 py-0.5 rounded-full bg-[#0d1e2e] text-[#00d4ff] border border-[#00d4ff]/30">
                         {tId.slice(0, 8)}
                       </span>
                     ))}
@@ -305,18 +309,18 @@ export function CompanyMemoryView() {
 
               {selectedMemory.metadata && Object.keys(selectedMemory.metadata).length > 0 && (
                 <div>
-                  <span className="text-[10px] uppercase font-semibold text-slate-400 block mb-1">Structured Metadata</span>
-                  <pre className="p-2.5 bg-slate-900 text-slate-100 rounded text-[10px] font-mono overflow-x-auto">
+                  <span className="text-[10px] uppercase font-semibold text-[#8c909c] block mb-1 font-mono">Structured Metadata</span>
+                  <pre className="p-3 bg-[#0b0c0f] border border-[#1e2026] text-slate-200 rounded-xl text-[10px] font-mono overflow-x-auto">
                     {JSON.stringify(selectedMemory.metadata, null, 2)}
                   </pre>
                 </div>
               )}
             </div>
 
-            <div className="p-3 bg-slate-50 border-t border-slate-200 flex items-center justify-between">
+            <div className="p-3.5 bg-[#0b0c0f] border-t border-[#1e2026] flex items-center justify-between">
               <button
                 onClick={() => handleDelete(selectedMemory.id)}
-                className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-rose-600 hover:text-rose-800 hover:bg-rose-50 rounded border border-rose-200"
+                className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-rose-400 hover:text-rose-300 hover:bg-rose-950/40 rounded-lg border border-rose-500/30 transition-colors"
               >
                 <Trash2 size={13} />
                 <span>Invalidate Memory</span>
@@ -324,7 +328,7 @@ export function CompanyMemoryView() {
 
               <button
                 onClick={() => setSelectedMemory(null)}
-                className="px-4 py-1.5 text-xs font-semibold bg-slate-800 hover:bg-slate-900 text-white rounded"
+                className="px-4 py-1.5 text-xs font-semibold bg-[#16181d] hover:bg-[#20232a] border border-[#1e2026] text-white rounded-lg transition-colors"
               >
                 Close
               </button>

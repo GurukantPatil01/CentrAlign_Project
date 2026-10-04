@@ -94,15 +94,15 @@ export function NewTaskConsole({ onRunGoal, isRunning }: NewTaskConsoleProps) {
   return (
     <div className="max-w-5xl mx-auto space-y-6">
       {/* Console Headline */}
-      <div className="border border-slate-200 bg-white p-6 rounded shadow-2xs">
-        <div className="flex items-center gap-2 text-xs font-semibold text-blue-600 tracking-wide uppercase">
+      <div className="border border-[#1e2026] bg-[#111216] p-6 rounded-2xl shadow-xs">
+        <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-[#00d4ff] font-semibold">
           <Sparkles size={14} />
           Autonomous Enterprise Execution Platform
         </div>
-        <h2 className="mt-1.5 text-xl font-bold text-slate-900 tracking-tight">
+        <h2 className="mt-2 text-2xl font-bold text-white tracking-tight">
           Dispatch an Enterprise Business Objective
         </h2>
-        <p className="mt-1 text-xs text-slate-600 max-w-3xl leading-relaxed">
+        <p className="mt-1 text-xs text-[#8c909c] max-w-3xl leading-relaxed">
           Provide a natural-language operational outcome. CentrAlign Worker parses company policies,
           retrieves system state, computes an execution plan, enforces human-in-the-loop authorization gates,
           recovers from transient subsystem failures, and independently verifies invariants.
@@ -112,10 +112,10 @@ export function NewTaskConsole({ onRunGoal, isRunning }: NewTaskConsoleProps) {
         <form onSubmit={handleSubmit} className="mt-5 space-y-4">
           <div>
             <div className="flex items-center justify-between mb-1.5">
-              <label htmlFor="goal-input" className="text-xs font-semibold text-slate-700">
+              <label htmlFor="goal-input" className="text-xs font-semibold text-slate-200">
                 Operational Outcome / Target Goal
               </label>
-              <span className="text-[11px] text-slate-400 font-mono">Accepts English instructions</span>
+              <span className="text-[11px] text-[#555863] font-mono">Accepts English instructions</span>
             </div>
             <textarea
               id="goal-input"
@@ -123,22 +123,22 @@ export function NewTaskConsole({ onRunGoal, isRunning }: NewTaskConsoleProps) {
               value={goal}
               onChange={(e) => setGoal(e.target.value)}
               placeholder="e.g. Process the latest invoice from Acme Corp..."
-              className="w-full text-xs font-mono p-3 bg-slate-50 border border-slate-300 rounded text-slate-900 focus:bg-white focus:border-blue-600 focus:outline-none transition-colors"
+              className="w-full text-xs font-mono p-3.5 bg-[#0b0c0f] border border-[#1e2026] rounded-xl text-white placeholder-[#555863] focus:border-[#00d4ff] focus:outline-none transition-colors"
             />
           </div>
 
           {/* Operational Execution Gates */}
-          <div className="flex flex-wrap items-center justify-between gap-4 pt-2 border-t border-slate-100">
-            <div className="flex flex-wrap items-center gap-4 text-xs text-slate-700">
+          <div className="flex flex-wrap items-center justify-between gap-4 pt-3 border-t border-[#1e2026]">
+            <div className="flex flex-wrap items-center gap-5 text-xs text-slate-300">
               <label className="flex items-center gap-2 cursor-pointer select-none">
                 <input
                   type="checkbox"
                   checked={interactive}
                   onChange={(e) => setInteractive(e.target.checked)}
-                  className="rounded border-slate-300 text-blue-600 focus:ring-blue-500"
+                  className="rounded border-[#1e2026] bg-[#0b0c0f] text-[#00d4ff] focus:ring-[#00d4ff]"
                 />
-                <span className="font-medium">Enforce Human Approval Gate</span>
-                <span className="text-[10px] text-slate-400">(Pauses on high-value thresholds)</span>
+                <span className="font-medium text-slate-200">Enforce Human Approval Gate</span>
+                <span className="text-[10px] text-[#8c909c]">(Pauses on high-value thresholds)</span>
               </label>
 
               <label className="flex items-center gap-2 cursor-pointer select-none">
@@ -146,10 +146,10 @@ export function NewTaskConsole({ onRunGoal, isRunning }: NewTaskConsoleProps) {
                   type="checkbox"
                   checked={simulateFailure}
                   onChange={(e) => setSimulateFailure(e.target.checked)}
-                  className="rounded border-slate-300 text-blue-600 focus:ring-blue-500"
+                  className="rounded border-[#1e2026] bg-[#0b0c0f] text-[#00d4ff] focus:ring-[#00d4ff]"
                 />
-                <span className="font-medium">Test Transient Gateway Failure</span>
-                <span className="text-[10px] text-slate-400">(Verifies retry & recovery loop)</span>
+                <span className="font-medium text-slate-200">Test Transient Gateway Failure</span>
+                <span className="text-[10px] text-[#8c909c]">(Verifies retry & recovery loop)</span>
               </label>
             </div>
 
@@ -157,9 +157,9 @@ export function NewTaskConsole({ onRunGoal, isRunning }: NewTaskConsoleProps) {
             <button
               type="submit"
               disabled={isRunning || !goal.trim()}
-              className="inline-flex items-center gap-2 px-5 py-2 rounded text-xs font-semibold bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 transition-colors shadow-xs"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-bold bg-[#00d4ff] hover:bg-[#38bdf8] text-slate-950 disabled:opacity-50 transition-all shadow-[0_0_15px_rgba(0,212,255,0.25)]"
             >
-              <Play size={14} />
+              <Play size={14} className="fill-current" />
               <span>{isRunning ? "Worker Executing..." : "Run Autonomous Worker"}</span>
             </button>
           </div>
@@ -169,50 +169,50 @@ export function NewTaskConsole({ onRunGoal, isRunning }: NewTaskConsoleProps) {
       {/* Preset Operational Scenarios */}
       <div>
         <div className="flex items-center justify-between mb-3 px-1">
-          <h3 className="text-xs font-semibold text-slate-700 uppercase tracking-wider">
+          <h3 className="text-xs font-mono uppercase tracking-wider text-[#8c909c] font-semibold">
             Verified Enterprise Workflow Scenarios
           </h3>
-          <span className="text-[11px] text-slate-400">Click any scenario to load its goal specification</span>
+          <span className="text-[11px] text-[#555863]">Click any scenario to load its goal specification</span>
         </div>
 
-        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          {PRESET_SCENARIOS.map((sc, index) => {
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {PRESET_SCENARIOS.map((sc) => {
             const isSelected = goal === sc.prompt;
             return (
               <div
                 key={sc.id}
                 onClick={() => handleSelectScenario(sc.prompt, sc.requiresApproval)}
-                className={`p-3.5 rounded border text-left cursor-pointer transition-all ${
+                className={`p-4 rounded-2xl border text-left cursor-pointer transition-all ${
                   isSelected
-                    ? "border-blue-600 bg-blue-50/40 shadow-xs"
-                    : "border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50/50"
+                    ? "border-[#00d4ff]/60 bg-[#111f2e] shadow-[0_0_15px_rgba(0,212,255,0.15)]"
+                    : "border-[#1e2026] bg-[#111216] hover:border-[#00d4ff]/30 hover:bg-[#14151b]"
                 }`}
               >
-                <div className="flex items-center justify-between mb-1.5">
-                  <span className="text-[10px] font-semibold uppercase tracking-wider px-1.5 py-0.5 rounded bg-slate-100 text-slate-700">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-[10px] font-mono font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full bg-[#16181d] text-[#00d4ff] border border-[#1e2026]">
                     {sc.domain}
                   </span>
                   <span
-                    className={`text-[9px] font-mono font-semibold px-1.5 py-0.2 rounded ${
+                    className={`text-[9px] font-mono font-semibold px-2 py-0.5 rounded-full border ${
                       sc.risk === "HIGH"
-                        ? "bg-rose-100 text-rose-800"
+                        ? "bg-[#280d12] text-[#f43f5e] border-[#f43f5e]/30"
                         : sc.risk === "MEDIUM"
-                        ? "bg-amber-100 text-amber-800"
-                        : "bg-emerald-100 text-emerald-800"
+                        ? "bg-[#271d0b] text-[#f59e0b] border-[#f59e0b]/30"
+                        : "bg-[#0a2318] text-[#10b981] border-[#10b981]/30"
                     }`}
                   >
                     {sc.risk} RISK
                   </span>
                 </div>
 
-                <div className="text-xs font-semibold text-slate-900 line-clamp-1">{sc.title}</div>
-                <div className="mt-1 text-[11px] text-slate-500 line-clamp-2 leading-relaxed">
+                <div className="text-xs font-bold text-white line-clamp-1">{sc.title}</div>
+                <div className="mt-1 text-[11px] text-[#8c909c] line-clamp-2 leading-relaxed">
                   {sc.prompt}
                 </div>
 
-                <div className="mt-2.5 pt-2 border-t border-slate-100 flex flex-wrap gap-1">
+                <div className="mt-3 pt-2.5 border-t border-[#1e2026] flex flex-wrap gap-1">
                   {sc.highlights.map((h) => (
-                    <span key={h} className="text-[10px] text-slate-500 bg-slate-100 px-1.5 py-0.5 rounded">
+                    <span key={h} className="text-[10px] text-[#8c909c] bg-[#0b0c0f] border border-[#1e2026] px-2 py-0.5 rounded-md font-mono">
                       {h}
                     </span>
                   ))}
