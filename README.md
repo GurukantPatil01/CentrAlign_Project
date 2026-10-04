@@ -193,4 +193,50 @@ npm run dev
 ```
 Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-Click **[ Run Flagship Demo ]** in the top navigation bar to watch the complete end-to-end execution combining persistent company memory, real browser computer use, human approval, failure recovery, and independent invariant verification!
+Click **[ Launch Flagship Task (Company X) ]** or navigate to the **Submission Deliverables** tab in the sidebar to review the full technical dossier and watch real-time execution!
+
+---
+
+## 8. Submission Requirements & Deliverables
+
+### A. Short Explanation of Architecture
+CentrAlign Worker implements an 8-phase autonomous execution state machine:
+`UNDERSTAND` $\rightarrow$ `PLAN` $\rightarrow$ `EXECUTE` $\rightarrow$ `OBSERVE` $\rightarrow$ `RECOVER` $\rightarrow$ `APPROVAL` $\rightarrow$ `VERIFY` $\rightarrow$ `COMPLETE`.
+The runtime is split into:
+1. **Agent Engine (`backend/app/agent/runtime.py`)**: State orchestrator evaluating domain heuristics and memory context.
+2. **Browser Worker (`backend/app/browser/manager.py`)**: Thread-safe Playwright Chromium supervisor managing DOM extraction and screenshots.
+3. **Company Memory (`backend/app/memory/store.py`)**: Persistent SQLite database (`company_memory.db`) with WAL mode.
+4. **Invariant Verifier (`backend/app/agent/tools.py`)**: Independent auditor enforcing `EXECUTOR != VERIFIER`.
+5. **Human Governance Gate**: Pause-and-resume boundary triggering when operations exceed corporate policy ceilings (e.g. ₹100,000).
+
+### B. Important Technical / Design Decisions
+1. **Real Playwright Browser Automation vs. Mocks**: Business tools operate via web UIs without public APIs. Real Playwright Chromium was chosen to provide genuine computer-use evidence (real DOM traversal, clicking, and screenshots).
+2. **Strict Verification Separation (`EXECUTOR != VERIFIER`)**: Self-reporting agents suffer from confirmation bias. A separate tool (`verify_invoice_payment`) queries database state independently to confirm reconciliation before completion.
+3. **Zero External Cloud Dependencies (Local SQLite WAL)**: Rather than introducing fragile external cloud vectors, the memory store runs on a fast, thread-safe SQLite WAL instance that persists across server restarts.
+4. **Deterministic Finite State Transitions**: For financial transactions and enterprise compliance, deterministic state gating delivers 100% test passing rates and prevents hallucinated endpoints or unconstrained spending loops.
+5. **Alternative Tool Routing Fallback**: If a browser tool fails due to DOM changes, the agent catches the error and falls back dynamically to the internal REST ERP API to ensure task completion.
+
+### C. Known Limitations
+1. **Intent & Entity Extraction**: Uses regex and candidate matching across 5 business domains (`invoice`, `refund`, `vendor_update`, `onboarding`, `support`). Goals outside these domains fall through to `unknown`.
+2. **Pre-Coded Invariants**: Reconciliation invariants are pre-defined domain rules rather than dynamically generated Python scripts.
+3. **Binary Approval Gates**: Supports pause/resume on supervisor sign-off, but does not support open-ended conversational back-and-forth.
+4. **Local ERP Sandbox**: Tested against an internal accounts payable portal rather than production NetSuite or SAP.
+
+### D. What We Would Build Next
+1. **Dense Vector Memory Embeddings**: Upgrade SQLite keyword retrieval to 1536-dimensional embeddings with `pgvector` or ChromaDB.
+2. **Multimodal Computer-Use Model**: Integrate vision-language models (e.g. Gemini 2.0 Flash / Claude 3.5 Sonnet Computer Use) for legacy desktop apps and canvas UIs.
+3. **Dynamic LangGraph DAG Synthesis**: Enable unconstrained multi-agent tool loops for completely novel business domains.
+4. **Multi-Turn Conversational Clarification**: Enable the worker to ask targeted clarifying questions when task input is incomplete.
+
+### E. Assumptions Made
+1. **Sandbox Safety**: Per evaluation guidelines, no real corporate credentials were used; an internal web portal models accounts payable.
+2. **Approval Ceiling**: Corporate governance policy POL-INV dictates that invoices $\ge$ ₹100,000 require supervisor sign-off.
+3. **Repeatable Evaluation**: The system is 100% self-contained and reproducible without requiring paid third-party API keys.
+
+### F. Models, Frameworks & Pre-Built Components
+- **Language & Runtime**: Python 3.14 + FastAPI + Pydantic v2
+- **Browser Engine**: Playwright Chromium (headless/sandboxed)
+- **Database / Memory**: SQLite 3 with Write-Ahead Logging (WAL)
+- **Frontend Stack**: Next.js 16.3.8 + React 19 + TailwindCSS v4 + Lucide React
+- **Testing**: Pytest 8.4.2 + AsyncIO (23 passing tests)
+

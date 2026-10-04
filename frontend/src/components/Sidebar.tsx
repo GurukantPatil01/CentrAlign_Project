@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import {
   Activity,
   AlertTriangle,
+  Award,
   BarChart2,
   BookOpen,
   Brain,
@@ -32,6 +33,7 @@ import {
 export type NavSection =
   | "new-task"
   | "active-task"
+  | "deliverables"
   | "task-history"
   | "company-memory"
   | "invoices"
@@ -171,6 +173,19 @@ export function Sidebar({ currentSection, onSelectSection, hasActiveTask, waitin
             <span className="h-4 w-4 rounded-full border border-current"></span>
             <span className="absolute h-1.5 w-1.5 rounded-full bg-current"></span>
           </div>
+        </button>
+
+        {/* 6. Submission Deliverables Dossier */}
+        <button
+          onClick={() => onSelectSection("deliverables")}
+          title="Submission Deliverables & Architecture"
+          className={`h-10 w-10 rounded-xl flex items-center justify-center transition-all ${
+            currentSection === "deliverables"
+              ? "bg-[#1f1b38] text-[#a78bfa] border border-[#a78bfa]/50 shadow-[0_0_12px_rgba(167,139,250,0.3)]"
+              : "text-[#8c909c] hover:text-[#a78bfa] hover:bg-[#16181d]"
+          }`}
+        >
+          <Award size={18} />
         </button>
 
         {/* 6. ERP Data Tables / Database */}

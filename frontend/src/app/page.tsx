@@ -27,6 +27,7 @@ import { PolicyViewer } from "@/components/PolicyViewer";
 import { AuditLogView } from "@/components/AuditLogView";
 import { EnterpriseDataView } from "@/components/EnterpriseDataView";
 import { CompanyMemoryView } from "@/components/CompanyMemoryView";
+import { SubmissionDeliverablesView } from "@/components/SubmissionDeliverablesView";
 import { Cpu, Database, RefreshCw, ShieldCheck } from "lucide-react";
 
 export default function Home() {
@@ -101,6 +102,23 @@ export default function Home() {
     }
   }
 
+  async function handleRunFlagshipCompanyX() {
+    setCurrentSection("active-task");
+    setIsRunning(true);
+    try {
+      const run = await runAgentTask(
+        "Find the latest invoice from Company X, extract the amount and due date, enter it into our internal system, and tell me once it is done.",
+        { interactive: true, simulateFailure: false }
+      );
+      setActiveRun(run);
+      await refreshAll();
+    } catch (err) {
+      console.error("Flagship Company X failed:", err);
+    } finally {
+      setIsRunning(false);
+    }
+  }
+
   // Approve Task
   async function handleApproveTask() {
     if (!activeRun) return;
@@ -141,6 +159,7 @@ export default function Home() {
   const sectionTitles: Record<NavSection, string> = {
     "new-task": "Worker Operations Console",
     "active-task": "Real-Time Agent Execution",
+    deliverables: "Submission Deliverables & System Architecture",
     "task-history": "Task Execution Traces",
     "company-memory": "Persistent Company Memory",
     invoices: "Accounts Payable — Invoices",
@@ -235,6 +254,16 @@ export default function Home() {
           {/* 6. Audit Log View */}
           {currentSection === "audit" && (
             <AuditLogView records={sandbox.audit ?? []} />
+          )}
+
+          {/* Deliverables Dossier */}
+          {currentSection === "deliverables" && (
+            <div className="flex-1 min-h-0 overflow-hidden">
+              <SubmissionDeliverablesView
+                onRunFlagship={handleRunFlagshipCompanyX}
+                isRunning={isRunning}
+              />
+            </div>
           )}
 
           {/* 7. Evaluations Dashboard */}
