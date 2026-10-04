@@ -195,6 +195,11 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 Click **[ Launch Flagship Task (Company X) ]** or navigate to the **Submission Deliverables** tab in the sidebar to review the full technical dossier and watch real-time execution!
 
+### 3. Demo Video
+An end-to-end recorded demonstration showing the prototype executing the target Company X prompt, handling approval, and verifying transaction completion is included directly in the repository:
+- **Video Path**: [`demo_video/autonomous_ai_worker_demo.webm`](demo_video/autonomous_ai_worker_demo.webm) (2.75 MB, 1440x900 resolution)
+- **Re-record Anytime**: Run `python3 scripts/record_demo_video.py` to regenerate the video automatically.
+
 ---
 
 ## 8. Submission Requirements & Deliverables
